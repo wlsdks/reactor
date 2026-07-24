@@ -1,0 +1,101 @@
+.readiness-strip {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-surface);
+  overflow: hidden;
+}
+
+.readiness-strip-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.readiness-strip-summary::-webkit-details-marker {
+  display: none;
+}
+
+.readiness-strip-summary:hover {
+  background: var(--bg-hover);
+}
+
+.readiness-strip-chevron {
+  width: 0;
+  height: 0;
+  border-left: 5px solid var(--text-muted);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  transition: transform var(--duration-base) var(--ease-out);
+  flex: 0 0 auto;
+}
+
+.readiness-strip[open] .readiness-strip-chevron {
+  transform: rotate(90deg);
+}
+
+.readiness-strip-title {
+  flex: 1;
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-primary);
+}
+
+.readiness-strip-meta {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.readiness-strip-list {
+  margin: 0;
+  padding: 0 var(--space-4) var(--space-3);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.readiness-strip-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+}
+
+.readiness-strip-row + .readiness-strip-row {
+  border-top: 1px solid var(--border);
+}
+
+.readiness-strip-row-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.readiness-strip-row-label {
+  flex: 1;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-primary);
+}
+
+.readiness-strip-row-desc {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Reduced motion: keep the open/closed rotated chevron as a STATIC
+ * state indicator, but remove the rotation transition itself. */
+@media (prefers-reduced-motion: reduce) {
+  .readiness-strip__chevron {
+    transition: none !important;
+  }
+}

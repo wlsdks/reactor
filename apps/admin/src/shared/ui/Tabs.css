@@ -1,0 +1,61 @@
+.tabs-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.tabs-list {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border-standard);
+  margin-bottom: var(--workspace-stack-gap);
+  scrollbar-width: thin;
+}
+
+.tabs-tab {
+  flex: 0 0 auto;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  min-height: var(--control-height-prominent);
+  font-size: var(--type-body-size);
+  font-weight: var(--font-weight-emphasis);
+  padding: var(--space-3) var(--control-inline-padding);
+  border-radius: var(--control-radius);
+  transition: color var(--duration-fast) var(--ease-standard), background-color var(--duration-fast) var(--ease-standard);
+  white-space: nowrap;
+}
+
+.tabs-tab:hover {
+  color: var(--text-secondary);
+}
+
+.tabs-tab:focus-visible {
+  outline: none;
+  background: var(--surface-feedback);
+  box-shadow: inset 0 -2px 0 var(--accent);
+  border-radius: var(--radius-sm);
+}
+
+.tabs-tab-active {
+  color: var(--text-primary);
+  background: var(--surface-panel-raised);
+}
+
+.tabs-panel {
+  outline: none;
+}
+
+.tabs-panel[hidden] {
+  display: none;
+}
+
+/* Reduced motion guard. */
+@media (prefers-reduced-motion: reduce) {
+  .tabs__trigger {
+    transition: none !important;
+  }
+}

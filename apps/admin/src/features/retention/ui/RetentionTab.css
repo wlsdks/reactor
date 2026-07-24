@@ -1,0 +1,92 @@
+.retention-tab {
+  max-width: 52rem;
+}
+
+.retention-tab__heading {
+  margin-bottom: var(--space-5);
+}
+
+.retention-tab__heading .section-title {
+  margin: 0;
+}
+
+.retention-tab__heading > p {
+  margin: var(--space-2) 0 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+}
+
+.retention-tab__fields {
+  border-block: 1px solid var(--border-standard);
+}
+
+.retention-tab__field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, 15rem);
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-4) 0;
+}
+
+.retention-tab__field + .retention-tab__field {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.retention-tab__field-copy {
+  min-width: 0;
+}
+
+.retention-tab__field-copy label {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+}
+
+.retention-tab__field-copy p {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+
+.retention-tab__field-control {
+  min-width: 0;
+}
+
+.retention-tab__field-control .number-input-stepper {
+  width: 100%;
+}
+
+.retention-tab__field-control .form-error {
+  margin-top: var(--space-2);
+}
+
+.retention-tab__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+@media (max-width: 700px) {
+  .retention-tab {
+    max-width: none;
+  }
+
+  .retention-tab__field {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .retention-tab__field-control .number-input-stepper {
+    max-width: 18rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .retention-tab__field-control .number-input-stepper,
+  .retention-tab__actions .btn {
+    width: 100%;
+  }
+}

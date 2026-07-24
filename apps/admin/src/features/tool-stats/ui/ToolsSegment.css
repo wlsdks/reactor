@@ -1,0 +1,134 @@
+/* Tools segment layout — mirrors latency dashboard rhythm so the two
+   PerformancePage tabs feel continuous when the operator switches. */
+
+.tools-segment__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.tools-segment__filter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tools-segment__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tools-segment__stats > div {
+  min-width: 0;
+  padding: var(--space-4) 0 var(--space-5);
+}
+
+.tools-segment__stats dt {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.tools-segment__stats dd {
+  margin: var(--space-2) 0 0;
+  color: var(--text-primary);
+  font: var(--font-weight-emphasis) var(--text-xl)/1.1 var(--font-mono);
+}
+
+.tools-segment__stat-primary {
+  background: transparent !important;
+}
+
+.tools-segment__stat-primary span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 1100px) {
+  .tools-segment__stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 var(--space-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .tools-segment__stats {
+    gap: 0 var(--space-5);
+  }
+}
+
+.tools-segment__panel {
+  margin: 0;
+  padding: var(--space-5) 0;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tools-segment__panel-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+}
+
+.tools-segment__action-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: var(--font-weight-emphasis);
+  font-size: var(--text-sm);
+}
+
+.tools-segment__action-link:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.tools-segment__tool-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-emphasis);
+}
+
+.tools-segment__servers-cell {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.tools-segment__rate-cell {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-variant-numeric: tabular-nums;
+}
+
+.tools-segment__error,
+.tools-segment__empty {
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+.tools-segment__accuracy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tools-segment__accuracy strong { color: var(--text-primary); }
+.tools-segment__accuracy p { margin: var(--space-1) 0 0; color: var(--text-muted); font-size: var(--text-sm); }
+.tools-segment__accuracy b { color: var(--text-primary); font: var(--font-weight-strong) var(--text-xl)/1 var(--font-mono); }

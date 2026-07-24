@@ -1,0 +1,1614 @@
+{
+  "ok": true,
+  "status": "passed",
+  "scope": "agent_release_gate",
+  "evidence": {
+    "artifact": "reports/hardening-suite.json",
+    "command": "uv run reactor-hardening-suite --report-file reports/hardening-suite.json",
+    "owner": "reactor.evals",
+    "mode": "local_agent_hardening_release_gate",
+    "selectedTags": {
+      "include": [],
+      "exclude": [],
+      "partial": false
+    },
+    "toolProfileBudget": {
+      "recommendedActiveToolRange": {
+        "min": 10,
+        "max": 20
+      },
+      "defaultSource": "graph_profile_policy",
+      "researchForcedTool": {
+        "profile": "research",
+        "tool": "Rag:hybrid_search",
+        "preflightBlocksWhenUnavailable": true,
+        "runBlocksWhenUnavailable": true,
+        "streamBlocksWhenUnavailable": true,
+        "operatorAction": "allow_required_research_tool"
+      },
+      "resolvedMetadataFields": [
+        "source",
+        "budget",
+        "configuredToolCount",
+        "activeToolCount",
+        "activeTools",
+        "droppedToolCount",
+        "droppedTools"
+      ],
+      "sampleDroppedTools": [
+        {
+          "tool": "Dangerous:delete",
+          "reason": "denied_tool",
+          "riskLevel": "write"
+        },
+        {
+          "tool": "Rag:admin_search",
+          "reason": "tool_not_allowed",
+          "riskLevel": "read"
+        },
+        {
+          "tool": "Shell:run",
+          "reason": "risk_level_not_allowed",
+          "riskLevel": "admin"
+        },
+        {
+          "tool": "Slack:post_message",
+          "reason": "max_tools_exceeded",
+          "riskLevel": "write"
+        }
+      ]
+    },
+    "researchAnswerContract": {
+      "profile": "research",
+      "requiresCitationIds": true,
+      "requiresSourceLabels": true,
+      "citationStyle": "manifest_ids",
+      "uncitedClaimsAllowed": false,
+      "publicMetadataField": "research_plan.answerContract",
+      "extractionMetadataField": "research_plan.answerExtraction",
+      "tracksContentHashMismatches": true,
+      "tracksMissingChunks": true,
+      "fallbackResponseIncludesSources": true
+    },
+    "toolInvocationLifecycle": {
+      "status": "verified",
+      "store": "SqlAlchemyToolInvocationStore",
+      "model": "ToolInvocationRecord",
+      "idempotencyConstraint": "uq_tool_invocations_idempotency",
+      "allowedStatuses": [
+        "started",
+        "succeeded",
+        "failed",
+        "requires_reconciliation",
+        "cancelled"
+      ],
+      "requiredRecordFields": [
+        "tenant_id",
+        "run_id",
+        "tool_id",
+        "status",
+        "idempotency_key",
+        "request_checksum",
+        "input_payload"
+      ],
+      "auditSurfaces": [
+        "langgraph_tool_executor",
+        "langchain_tool_adapter",
+        "approval_pending",
+        "approval_rejected",
+        "run_tool_invocations_api",
+        "admin_tool_calls_api"
+      ],
+      "publicPayloadRedaction": true,
+      "terminalPayloadsValidated": true,
+      "pendingApprovalStatus": "started",
+      "terminalStatuses": [
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "durableRunQueue": {
+      "status": "verified",
+      "store": "SqlAlchemyDurableStore",
+      "queueModel": "RunQueue",
+      "deadLetterModel": "DeadLetterJob",
+      "leasedStatuses": [
+        "queued",
+        "retryable_failed"
+      ],
+      "expiredLeaseAction": "retry_or_dead_letter",
+      "deadLetterReason": "run_queue_lease_attempts_exhausted",
+      "fencingTokenRequired": true,
+      "deadLetterPayloadFields": [
+        "attempt",
+        "maxAttempts",
+        "leaseOwner",
+        "fencingToken",
+        "queuePayload"
+      ],
+      "diagnosticsSurface": {
+        "status": "verified",
+        "apiPaths": [
+          "/api/admin/durable-queue/diagnostics",
+          "/v1/admin/durable-queue/diagnostics"
+        ],
+        "dashboardFacet": "ops.dashboard.durableQueue",
+        "tenantScoped": true,
+        "missingStoreStatus": "unavailable",
+        "requiredCountFields": [
+          "queueStatusCounts",
+          "queueBacklog",
+          "leasedCount",
+          "deadLetterCount"
+        ],
+        "releaseReviewFields": [
+          "leaseRecovery",
+          "deadLetterReason",
+          "fencingTokenRequired"
+        ],
+        "remediationActions": [
+          {
+            "name": "release_expired_leases",
+            "apiPaths": [
+              "/api/admin/durable-queue/release-expired",
+              "/v1/admin/durable-queue/release-expired"
+            ],
+            "permission": "settings:write",
+            "auditCategory": "durable_queue",
+            "auditAction": "UPDATE",
+            "resourceType": "run_queue",
+            "resourceId": "release_expired"
+          }
+        ]
+      }
+    },
+    "outboxInboxLifecycle": {
+      "status": "verified",
+      "store": "SqlAlchemyDurableStore",
+      "outboxModel": "OutboxEvent",
+      "inboxModel": "InboxEvent",
+      "idempotencyModel": "IdempotencyRecord",
+      "dispatcher": "OutboxDispatcher",
+      "claimStrategy": "postgres_for_update_skip_locked",
+      "outboxStatuses": [
+        "pending",
+        "dispatching",
+        "dispatched",
+        "retryable_failed",
+        "dead_lettered"
+      ],
+      "inboxStatuses": [
+        "received",
+        "processing",
+        "processed",
+        "ignored",
+        "failed"
+      ],
+      "replayableDestinations": [
+        "a2a.task.created",
+        "a2a.task.updated",
+        "slack.event_callback",
+        "slack.slash_command",
+        "slack.block_action"
+      ],
+      "idempotencyConstraint": "uq_outbox_events_idempotency",
+      "inboxDeduplicationConstraint": "uq_inbox_events_source_event",
+      "leaseFields": [
+        "lease_owner",
+        "lease_expires_at",
+        "attempt",
+        "max_attempts"
+      ],
+      "sideEffectsBeforeOutboxForbidden": true,
+      "incomingEventsPersistedBeforeProcessing": true,
+      "atLeastOnceDeliveryAssumed": true,
+      "dispatcherDeadLettersUnsupportedRoutes": true,
+      "retryableFailuresReclaimable": true,
+      "staleLeaseOwnerCannotDispatch": true,
+      "payloadReplayable": true
+    },
+    "redisCoordination": {
+      "status": "verified",
+      "client": "redis.asyncio.Redis",
+      "healthCheck": "check_redis",
+      "productionMultiReplicaRequired": true,
+      "ephemeralOnly": true,
+      "durableStateForbidden": true,
+      "primaryCheckpointStoreForbidden": "langgraph-checkpoint-redis",
+      "allowedUses": [
+        "rate_limit_counters",
+        "lock_tokens",
+        "pubsub_wakeups",
+        "ttl_cache_entries"
+      ],
+      "pubsubDelivery": "at_most_once",
+      "rateLimitFailureMode": "fail_closed_by_default",
+      "clientClosedAfterPing": true,
+      "runLifecyclePublisherClosedOnContainerClose": true,
+      "slackUserRateLimiterClosedOnContainerClose": true
+    },
+    "mcpPreflight": {
+      "status": "verified",
+      "protocolVersion": "2025-11-25",
+      "supportedTransports": [
+        "stdio",
+        "streamable_http"
+      ],
+      "adapter": "langchain-mcp-adapters",
+      "sdk": "mcp",
+      "toolNameFormat": "ServerName:tool_name",
+      "adapterToolLoading": {
+        "client": "MultiServerMCPClient",
+        "primaryMethod": "get_tools",
+        "sessionLoader": "load_mcp_tools",
+        "connectionDictionaryTransports": [
+          "stdio",
+          "streamable_http"
+        ],
+        "streamableHttpProtocolHeader": "MCP-Protocol-Version",
+        "structuredContentArtifactsSupported": true,
+        "toolErrorsReturnToolMessage": true,
+        "toolExceptionPropagationConfigurable": true
+      },
+      "privateAddressBlocked": true,
+      "tokenPassthroughForbidden": true,
+      "unsupportedProtocolRejected": true,
+      "credentialBindingRequired": true,
+      "authWithoutCredentialBindingRejected": true,
+      "authorizationSecurity": {
+        "oauth21Required": true,
+        "pkceRequired": true,
+        "tlsRequired": true,
+        "protectedResourceMetadataRequired": true,
+        "authorizationServerMetadataRequired": true,
+        "tokensStoredServerSide": true,
+        "scopesValidated": true,
+        "resourceIndicatorsRequired": true,
+        "tokenAudienceValidated": true,
+        "leastPrivilegeScopesRequired": true
+      }
+    },
+    "slackMcpSurfacePolicy": {
+      "status": "verified",
+      "nativeGatewayOwnsIngress": true,
+      "nativeGatewayOwnsCurrentThreadReplies": true,
+      "slackMcpModelFacingOnly": true,
+      "overlappingWriteSurfacesRequireRouteSelection": true,
+      "currentThreadReplyRoute": "native_gateway",
+      "workspaceActionRoute": "slack_mcp_tools",
+      "promptContextDeclaresToolAvailability": true,
+      "unavailableToolClaimsForbidden": true,
+      "auditSurfaces": [
+        "native_slack_gateway",
+        "slack_mcp_tools"
+      ],
+      "feedbackReviewHandoff": {
+        "status": "verified",
+        "responseSurfaces": [
+          "slack_run_response",
+          "slack_approval_resume_ack"
+        ],
+        "reviewCommand": "reactor-admin feedback --rating thumbs_down --review-status inbox --limit 10 --output table",
+        "feedbackNextActionIds": [
+          "promote-eval",
+          "sync-langsmith",
+          "refresh-readiness",
+          "export-candidate-feedback",
+          "review-done"
+        ],
+        "feedbackNextActionIdentityFields": [
+          "feedbackId",
+          "evalCaseId",
+          "sourceRunId"
+        ],
+        "feedbackNextActionReadinessFields": [
+          "releaseReadinessFile",
+          "readinessReportArg",
+          "requiredReadinessReports",
+          "readinessReports"
+        ],
+        "verificationSensors": {
+          "focusedTests": [
+            "uv run pytest tests/unit/test_admin_cli.py -q -k 'structured_recovery_actions or structured_error_body'",
+            "uv run pytest tests/unit/test_feedback_router.py -q -k 'feedback_id or readiness_handoff'",
+            "uv run pytest tests/integration/test_feedback_api.py -q -k feedback"
+          ],
+          "covers": [
+            "admin_feedback_review_surfaces_recovery_actions",
+            "admin_feedback_review_preserves_structured_error_body",
+            "feedback_api_review_handoff_exercised",
+            "feedback_next_actions_preserve_feedback_identity",
+            "feedback_next_actions_preserve_readiness_handoff_fields"
+          ]
+        },
+        "rawSlackPayloadExcluded": true
+      }
+    },
+    "memoryMaintenanceLifecycle": {
+      "status": "verified",
+      "framework": "langmem",
+      "extractor": "LangMemMemoryExtractor",
+      "proposalJob": "LangMemProposalJob",
+      "proposalService": "MemoryProposalService",
+      "store": "SqlAlchemyMemoryStore",
+      "managerContract": {
+        "factory": "langmem.create_memory_manager",
+        "storeFactory": "langmem.create_memory_store_manager",
+        "invokeApi": "ainvoke",
+        "inputMessagesKey": "messages",
+        "maxSteps": 1,
+        "enableInserts": true,
+        "enableUpdates": true,
+        "enableDeletes": false,
+        "applicationOwnsDeletes": true
+      },
+      "proposalStatuses": [
+        "proposed",
+        "approved",
+        "rejected",
+        "expired"
+      ],
+      "itemStatuses": [
+        "active",
+        "superseded",
+        "tombstoned"
+      ],
+      "extractionCreatesProposalsOnly": true,
+      "promotionRequiresReviewer": true,
+      "sensitivePromotionBlocked": true,
+      "tombstoneDeletesEmbedding": true,
+      "activeQueryFiltersStatus": true,
+      "applicationOwnsLifecycle": true,
+      "checkpointMemorySeparated": true,
+      "consolidationPolicy": {
+        "supersedesPriorActiveMemory": true,
+        "reviewedPromotionCanSupersedePriorActiveMemory": true,
+        "dedupeOrConflictRequiresReviewer": true,
+        "supersededItemsExcludedFromActiveContext": true
+      },
+      "verificationSensors": {
+        "focusedTests": [
+          "uv run pytest tests/unit/test_rag_memory.py -q",
+          "uv run pytest tests/unit/test_prompt_assembler.py -q -k memory",
+          "uv run pytest tests/unit/test_context_manifest.py -q -k memory",
+          "uv run pytest tests/unit/test_memory_cli.py tests/unit/test_memory_lifecycle_actions.py -q -k 'memory_lifecycle or sensitive_recovery_actions or structured_error_body'",
+          "REACTOR_TEST_POSTGRES=1 uv run pytest tests/integration/test_memory_postgres_lifecycle.py -q",
+          "uv run pytest tests/integration/test_admin_api.py -q -k memory",
+          "uv run pytest tests/integration/test_feedback_api.py -q -k memory",
+          "uv run pytest tests/unit/test_slack_worker.py -q -k 'reaction_feedback_memory_handoff'",
+          "uv run pytest tests/unit/test_slack_feedback.py -q -k 'negative_ack_preserves_memory_review_tag'"
+        ],
+        "releaseReadinessContracts": [
+          "memoryMaintenanceLifecycle",
+          "contextManifestDiagnostics.memoryAdmissionPolicy"
+        ],
+        "artifactOutputs": [
+          "reports/hardening-suite.json",
+          "reports/release/replatform-readiness.local.json",
+          "reports/release/release-smoke-plan.local.json",
+          "reports/release/release-smoke-preflight.local.json",
+          "reports/release/release-smoke-preflight.local.env",
+          "reports/release-smoke-run.json",
+          "reports/release-evidence.json",
+          "reports/release-readiness.json"
+        ],
+        "covers": [
+          "langmem_manager_shape_exercised",
+          "proposal_promotion_requires_reviewer",
+          "sensitive_memory_proposals_blocked",
+          "memory_source_payload_secret_markers_flagged",
+          "source_payload_sensitive_memory_proposals_blocked",
+          "supersession_marks_prior_active_memory",
+          "self_supersession_rejected",
+          "tombstone_deletes_embedding",
+          "active_namespace_memory_retrieval_boundary_exercised",
+          "superseded_and_tombstoned_memory_excluded_from_model_context",
+          "memory_review_api_and_cli_surface_exercised",
+          "memory_feedback_review_handoff_exercised",
+          "slack_reaction_feedback_enters_memory_review_handoff",
+          "slack_button_feedback_preserves_memory_review_tags"
+        ]
+      },
+      "reviewSurface": {
+        "approvalApi": "/api/admin/memory/proposals/{proposal_id}/approve",
+        "cliApprovalTable": "reactor-memory approve PROPOSAL_ID --reason 'reviewed and approved memory' --output table",
+        "lifecycleGateAction": "uv run reactor-hardening-suite --report-file reports/hardening-suite.json && uv run pytest tests/unit/test_rag_memory.py tests/unit/test_prompt_assembler.py tests/unit/test_context_manifest.py tests/integration/test_admin_api.py tests/integration/test_feedback_api.py -q -k memory && uv run pytest tests/unit/test_memory_cli.py tests/unit/test_memory_lifecycle_actions.py -q -k 'memory_lifecycle or sensitive_recovery_actions or structured_error_body' && REACTOR_TEST_POSTGRES=1 uv run pytest tests/integration/test_memory_postgres_lifecycle.py -q && uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --readiness-report hardening_suite=reports/hardening-suite.json",
+        "dependencyReviewCommand": "uv pip show langmem trustcall langgraph",
+        "dependencyRemediationCommand": "monitor upstream trustcall/langmem compatibility; keep dependency warning visible until trustcall stops importing langgraph.constants.Send or Reactor replaces the dependency path",
+        "proposalNextActionIds": [
+          "approve-memory",
+          "reject-memory",
+          "review-memory-dependencies",
+          "verify-memory-lifecycle"
+        ],
+        "lifecycleGateReportBinding": {
+          "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json",
+          "requiredReadinessReports": [
+            "hardening_suite"
+          ],
+          "readinessReports": {
+            "hardening_suite": "reports/hardening-suite.json"
+          }
+        },
+        "feedbackNextActionSubjectField": "subjectUserId",
+        "responseProjection": "maintenance",
+        "rawSourcePayloadExposed": false,
+        "sourcePayloadPrivacy": {
+          "apiProjection": "maintenance",
+          "cliProjection": "maintenance",
+          "readinessProjection": "contract_metadata_only",
+          "rawSourcePayloadExposed": false,
+          "sourcePayloadKeysExposed": false,
+          "secretScanRequired": true
+        },
+        "sensitivityProjection": {
+          "apiProjection": "maintenance.sensitivity",
+          "cliProjection": "SENSITIVITY",
+          "rawSourcePayloadExposed": false,
+          "fields": [
+            "status",
+            "policy",
+            "markers",
+            "source"
+          ]
+        },
+        "maintenanceSummaryFields": [
+          "manager",
+          "storeManager",
+          "operation",
+          "maxSteps",
+          "deletePolicy",
+          "dependencyReviewCommand",
+          "dependencyRemediationCommand",
+          "sensitivity"
+        ]
+      },
+      "dependencyWarnings": {
+        "status": "review_required",
+        "checkedPackages": [
+          "langmem",
+          "trustcall",
+          "langgraph"
+        ],
+        "installedVersions": {
+          "langmem": "0.0.30",
+          "trustcall": "0.0.39",
+          "langgraph": "1.2.7"
+        },
+        "directPins": {
+          "langgraph": "==1.2.7",
+          "langmem": "==0.0.30"
+        },
+        "pinSource": "pyproject.toml",
+        "reviewCommand": "uv pip show langmem trustcall langgraph",
+        "resolverCheck": {
+          "command": "uv lock --upgrade-package langmem --upgrade-package trustcall --upgrade-package langgraph --dry-run",
+          "status": "no_lockfile_changes",
+          "latestKnownFrom": "resolver"
+        },
+        "remediationCommand": "monitor upstream trustcall/langmem compatibility; keep dependency warning visible until trustcall stops importing langgraph.constants.Send or Reactor replaces the dependency path",
+        "findings": [
+          {
+            "package": "trustcall",
+            "module": "trustcall._base",
+            "deprecatedImport": "langgraph.constants.Send",
+            "replacement": "langgraph.types.Send",
+            "severity": "warning"
+          }
+        ]
+      }
+    },
+    "ragIngestionLifecycle": {
+      "status": "verified",
+      "framework": "langchain-postgres",
+      "vectorStore": "PGVector",
+      "embeddingBoundary": "LangChainEmbeddings",
+      "sourceAllowlistRequired": true,
+      "mimeAllowlistRequired": true,
+      "sizeLimitRequired": true,
+      "checksumIdempotency": true,
+      "backgroundRetries": true,
+      "quarantineBeforeIndex": true,
+      "humanReviewRequiredForCapturedCandidates": true,
+      "aclMetadataRequired": true,
+      "aclBeforeRanking": true,
+      "rawAclRedactedFromModelContext": true,
+      "reindexAuditRequired": true,
+      "poisoningEvalCaseIds": [
+        "rag-poisoning-retrieval-is-labeled"
+      ],
+      "verificationSensors": {
+        "focusedTests": [
+          "uv run pytest tests/unit/test_rag_document_management.py tests/unit/test_rag_retriever.py tests/unit/test_rag_vector_store.py -q",
+          "uv run pytest tests/unit/test_prompt_assembler.py -q -k rag",
+          "uv run pytest tests/unit/test_agent_graph_policy.py -q -k research_profile_marks_plan",
+          "uv run pytest tests/unit/test_documents_cli.py -q -k 'ask and citation'",
+          "uv run pytest tests/unit/test_eval_regression_suite_apply.py -q -k documents_ask",
+          "uv run pytest tests/unit/test_rag_ingestion_candidate_ids.py tests/unit/test_runs_cli.py -q -k candidate",
+          "uv run pytest tests/unit/test_rag_candidate_actions.py tests/unit/test_dress_api_smoke.py -q",
+          "uv run pytest tests/unit/test_feedback_router.py tests/unit/test_documents_cli.py -q -k 'preserve_feedback_id_on_rag_candidate_handoff or candidate_ask_missing_citation_uses_candidate_eval_handoff or langsmith_report_preserves_rating_only_feedback_queue'",
+          "uv run pytest tests/unit/test_release_readiness_evidence.py -q -k 'eval_apply_boundary or without_eval_apply_coverage'",
+          "uv run pytest tests/integration/test_rag_ingestion_candidates_api.py -q",
+          "uv run pytest tests/integration/test_feedback_api.py -q -k rag_candidate",
+          "uv run pytest tests/integration/test_feedback_api.py -q -k 'admin_submit_returns_review_next_actions or stats_export'",
+          "uv run pytest tests/integration/test_feedback_api.py -q -k 'citation_marker and memory'"
+        ],
+        "releaseReadinessContracts": [
+          "ragIngestionLifecycle",
+          "contextManifestDiagnostics.ragGroundingPolicy",
+          "researchAnswerContract"
+        ],
+        "covers": [
+          "managed_document_ingest_requires_acl",
+          "retrieval_filters_acl_before_ranking",
+          "rag_tool_results_promote_citations_to_context",
+          "weak_documents_ask_answers_promote_to_eval_with_citation_markers",
+          "documents_ask_review_done_action_closes_feedback_queue",
+          "rag_candidate_eval_handoff_uses_canonical_candidate_ids",
+          "rag_candidate_hardening_report_action_exposed_before_readiness",
+          "api_smoke_requires_readiness_action_fields",
+          "rag_candidate_feedback_review_handoff_exercised",
+          "rag_candidate_feedback_actions_scope_inferred_candidate_tag",
+          "rag_candidate_feedback_bulk_review_action_closes_candidate_queue",
+          "rag_candidate_ask_action_preserves_feedback_tags",
+          "rag_candidate_minor_boundary_requires_eval_apply_coverage",
+          "rag_candidate_eval_apply_boundary_remediation_exposed",
+          "memory_feedback_review_handoff_preserved_while_citation_marker_is_required"
+        ]
+      },
+      "diagnosticsSurface": {
+        "status": "verified",
+        "apiPaths": [
+          "/api/admin/rag/ingestion-jobs/{job_id}",
+          "/v1/rag/ingestion-jobs/{job_id}"
+        ],
+        "releaseReviewFields": [
+          "sourceAllowlist",
+          "mimeAllowlist",
+          "sizeLimitBytes",
+          "checksum",
+          "chunkCount",
+          "aclHash",
+          "quarantineStatus",
+          "retryCount",
+          "poisoningFindings"
+        ]
+      }
+    },
+    "artifactLifecycle": {
+      "status": "verified",
+      "storage": {
+        "production": "s3-compatible",
+        "local": "filesystem",
+        "metadataStore": "postgres"
+      },
+      "referenceBoundary": "ArtifactReference",
+      "graphStateStoresReferencesOnly": true,
+      "blobBodiesExcludedFromGraphState": true,
+      "metadataRequired": [
+        "artifact_id",
+        "tenant_id",
+        "owner_user_id",
+        "mime_type",
+        "size_bytes",
+        "sha256",
+        "acl",
+        "retention_days",
+        "source_run_id"
+      ],
+      "accessPolicy": {
+        "shortLivedSignedUrls": true,
+        "authenticatedStreamingEndpointSupported": true,
+        "tenantAclEnforcedBeforeDownload": true,
+        "signedUrlExpiryTested": true
+      },
+      "ingestionPolicy": {
+        "mimeSniffingRequired": true,
+        "mimeAllowlistRequired": true,
+        "sizeLimitRequired": true,
+        "checksumIdempotency": true,
+        "parserAllowlistRequired": true,
+        "parserSandboxingRequired": true,
+        "spoofingRegressionTested": true,
+        "parserFailureQuarantinesArtifact": true
+      },
+      "retentionPolicy": {
+        "tenantRetentionApplied": true,
+        "deleteOrTombstoneDerivedEmbeddings": true,
+        "tombstoneAuditRequired": true
+      }
+    },
+    "promptReleaseLifecycle": {
+      "status": "verified",
+      "store": "SqlAlchemyPromptStore",
+      "versionModel": "PromptVersionRecord",
+      "releaseModel": "PromptReleaseRecord",
+      "templateBoundary": "ChatPromptTemplate",
+      "contentHashRequired": true,
+      "renderedChecksumRequired": true,
+      "evalGateRequired": true,
+      "langsmithDatasetRequired": true,
+      "baselineComparisonRequired": true,
+      "promptWritePermissionRequired": true,
+      "releaseAuditRequired": true,
+      "rollbackTargetRequired": true,
+      "noDynamicPromptDeserialization": true,
+      "metadataFields": [
+        "promptReleaseId",
+        "templateId",
+        "versionId",
+        "environment",
+        "contentHash",
+        "renderedChecksum",
+        "evalDatasetName",
+        "evalExperimentId",
+        "baselineVersionId",
+        "candidateVersionId",
+        "releasedBy"
+      ],
+      "evalGate": {
+        "sourceSuite": "tests/fixtures/agent-eval/regression-suite.json",
+        "datasetName": "reactor-regression",
+        "requiredSplit": "regression",
+        "splitCounts": {
+          "regression": 4
+        },
+        "caseIds": [
+          "tool-exposure-issue-readonly",
+          "casual-prompt-exposes-no-tools",
+          "rag-grounded-answer-cites-source",
+          "rag-poisoning-retrieval-is-labeled"
+        ],
+        "langsmithReportName": "langsmith_eval_sync"
+      },
+      "diagnosticsSurface": {
+        "status": "verified",
+        "apiPaths": [
+          "/api/admin/prompts/templates/{template_id}/releases",
+          "/v1/admin/prompts/templates/{template_id}/releases"
+        ],
+        "releaseReviewFields": [
+          "promptReleaseId",
+          "contentHash",
+          "renderedChecksum",
+          "evalDatasetName",
+          "evalExperimentId",
+          "recommendation",
+          "rollbackTarget"
+        ]
+      }
+    },
+    "approvalLifecycle": {
+      "status": "verified",
+      "runtimePause": "langgraph_interrupts_or_langchain_hitl",
+      "store": "SqlAlchemyApprovalStore",
+      "requestModel": "ApprovalRequest",
+      "decisionModel": "ApprovalDecision",
+      "rowModel": "PendingApproval",
+      "pendingStatus": "pending",
+      "terminalStatuses": [
+        "approved",
+        "rejected",
+        "expired",
+        "cancelled"
+      ],
+      "rbacRequired": true,
+      "tenantScoped": true,
+      "runAccessChecked": true,
+      "decisionReasonRequiredOnReject": true,
+      "resumeProvenanceRequired": true,
+      "auditRequired": true,
+      "expirySupported": true,
+      "sideEffectsBeforeApprovalForbidden": true,
+      "slackDecisionRouteSupported": true,
+      "metadataFields": [
+        "approval_id",
+        "tenant_id",
+        "run_id",
+        "tool_id",
+        "requested_by",
+        "decided_by",
+        "decision_reason",
+        "thread_id",
+        "checkpoint_ns"
+      ],
+      "apiPaths": [
+        "/api/approvals",
+        "/v1/approvals",
+        "/api/approvals/{approval_id}/approve",
+        "/v1/approvals/{approval_id}/approve",
+        "/api/approvals/{approval_id}/reject",
+        "/v1/approvals/{approval_id}/reject"
+      ]
+    },
+    "providerFallbackPolicy": {
+      "status": "verified",
+      "middleware": "ModelFallbackMiddleware",
+      "router": "ProviderRouter",
+      "fallbackMetadata": [
+        "from_provider",
+        "from_model",
+        "to_provider",
+        "to_model",
+        "reason",
+        "latency_ms",
+        "cost_usd"
+      ],
+      "disabledProfilesSkipped": true,
+      "sameModelFallbackRejected": true,
+      "fallbackRequiresAlternateEnabledProfile": true,
+      "tenantPolicyBoundary": "provider_routing_policy",
+      "regionRetentionBoundaryRequired": true,
+      "postToolFallbackRequiresPersistedState": true
+    },
+    "langgraphFaultTolerance": {
+      "status": "verified",
+      "runtime": "langgraph",
+      "loopExitBudget": {
+        "configKey": "recursion_limit",
+        "defaultLimit": 25,
+        "configuredOnDurableInvocations": true,
+        "configuredOnLangChainAgentInvocations": true,
+        "releaseEvidenceRequired": true
+      },
+      "nodeDefaults": {
+        "retryPolicy": "graph_node_retry_policy",
+        "cachePolicy": "disabled_for_side_effect_nodes",
+        "timeoutSeconds": 120
+      },
+      "cacheSerialization": {
+        "langgraphDefaultKeyFuncUsesPickle": true,
+        "customKeyFuncRequired": true,
+        "pickleFallbackEnabled": false,
+        "sideEffectNodeCacheEnabled": false
+      },
+      "errorHandling": {
+        "guardFailuresFailClosed": true,
+        "toolFailuresBecomeToolMessages": true,
+        "nonIdempotentEffectsBehindOutbox": true,
+        "interruptsBypassErrorHandlers": true
+      },
+      "resumeSemantics": {
+        "threadIdRequired": true,
+        "checkpointNsRequired": true,
+        "trustedCheckpointIdOnly": true,
+        "stateHistoryAuditable": true,
+        "interruptedNodeRerunsFromStart": true,
+        "preInterruptSideEffectsForbidden": true,
+        "preInterruptSideEffectsRequireIdempotency": true
+      }
+    },
+    "checkpointRetentionPolicy": {
+      "status": "verified",
+      "runtime": "langgraph",
+      "store": "AsyncPostgresSaver",
+      "graphStoreRuntime": {
+        "durableStore": "AsyncPostgresStore",
+        "localStore": "InMemoryStore",
+        "durableDeploymentsRequirePostgres": true,
+        "localStoreNonDurableOnly": true,
+        "sameStorePassedToLangChainCreateAgent": true
+      },
+      "retentionSettings": [
+        "retention.session.days",
+        "retention.conversation.days",
+        "retention.audit.days",
+        "retention.metric.days",
+        "retention.checkpoint.days"
+      ],
+      "policyOwner": "reactor.persistence",
+      "missingDatabaseFailsClosed": true,
+      "tenantScopedDeletion": true,
+      "exportBeforeDeleteSupported": true,
+      "stateHistoryRetentionAligned": true,
+      "forkProvenanceRetained": true,
+      "checkpointMetadataRedacted": true,
+      "auditSurface": "retention_policy_api"
+    },
+    "streamingEventContract": {
+      "status": "verified",
+      "runtime": "langgraph",
+      "api": "astream_events",
+      "version": "v2",
+      "eventTypes": [
+        "run.stream.approval",
+        "run.stream.completed",
+        "run.stream.started",
+        "run.stream.token",
+        "run.stream.tool"
+      ],
+      "upstreamEventFields": [
+        "event",
+        "name",
+        "run_id",
+        "parent_ids",
+        "tags",
+        "metadata",
+        "data"
+      ],
+      "requiredPayloadFields": [
+        "run_id",
+        "sequence",
+        "graph_node",
+        "trace_id"
+      ],
+      "sequenceMonotonic": true,
+      "persistedReplay": true,
+      "replayFilter": "run.stream.",
+      "graphNodeRequired": true,
+      "traceIdRequired": true,
+      "tenantScopedPersistence": true,
+      "publicPayloadRedaction": {
+        "apiBoundary": "public_run_event_payload",
+        "apiEndpoints": [
+          "GET /v1/runs/{run_id}/events",
+          "GET /v1/runs/{run_id}/stream-events"
+        ],
+        "cliBoundary": "stream_event_summary",
+        "redactionFunction": "redact_trace_payload",
+        "secretShapedValuesRedacted": true,
+        "sensitiveKeysDropped": true,
+        "toolResultsSanitized": true,
+        "rawPayloadsExcluded": true
+      },
+      "terminalNextActions": {
+        "includedInCompletedPayload": true,
+        "actionIds": [
+          "diagnose-run",
+          "inspect-state-history",
+          "replay-stream",
+          "fork-checkpoint"
+        ],
+        "commands": [
+          "reactor-runs diagnose '{run_id}' --output table",
+          "reactor-admin state-history '{run_id}' --output table",
+          "reactor-runs replay '{run_id}' --output table",
+          "reactor-runs fork {run_id} --checkpoint-ns {checkpoint_ns} --checkpoint-id {checkpoint_id} --output table"
+        ],
+        "identityFields": [
+          "sourceRunId",
+          "threadId",
+          "checkpointNs"
+        ],
+        "runtimePayloadVerified": true
+      },
+      "recommendedInterruptStreaming": {
+        "recommendedApi": "stream_events",
+        "recommendedAsyncApi": "astream_events",
+        "version": "v3",
+        "projectionFields": [
+          "interrupted",
+          "interrupts",
+          "output"
+        ],
+        "resumeCommand": "Command(resume=...)",
+        "threadIdRequired": true,
+        "persistentCheckpointerRequired": true,
+        "interruptPayloadsJsonSerializable": true
+      }
+    },
+    "graphTopology": {
+      "composition": "stage_subgraphs",
+      "stageOrder": [
+        "preflight",
+        "generation",
+        "tool_policy",
+        "completion"
+      ],
+      "nodeOrder": [
+        "guard",
+        "context",
+        "model",
+        "approval_gate",
+        "tool_executor",
+        "output_guard",
+        "hooks"
+      ],
+      "subgraphOrder": [
+        "preflight",
+        "generation",
+        "tool_policy",
+        "completion"
+      ],
+      "subgraphEdges": [
+        {
+          "source": "__start__",
+          "target": "preflight"
+        },
+        {
+          "source": "preflight",
+          "target": "generation"
+        },
+        {
+          "source": "generation",
+          "target": "tool_policy"
+        },
+        {
+          "source": "tool_policy",
+          "target": "completion"
+        },
+        {
+          "source": "completion",
+          "target": "__end__"
+        }
+      ],
+      "subgraphs": [
+        {
+          "name": "preflight",
+          "entryNode": "guard",
+          "exitNode": "context",
+          "checkpointMode": "inherited_parent",
+          "nodes": [
+            "guard",
+            "context"
+          ],
+          "nodeCount": 2
+        },
+        {
+          "name": "generation",
+          "entryNode": "model",
+          "exitNode": "model",
+          "checkpointMode": "inherited_parent",
+          "nodes": [
+            "model"
+          ],
+          "nodeCount": 1
+        },
+        {
+          "name": "tool_policy",
+          "entryNode": "approval_gate",
+          "exitNode": "tool_executor",
+          "checkpointMode": "inherited_parent",
+          "nodes": [
+            "approval_gate",
+            "tool_executor"
+          ],
+          "nodeCount": 2
+        },
+        {
+          "name": "completion",
+          "entryNode": "output_guard",
+          "exitNode": "hooks",
+          "checkpointMode": "inherited_parent",
+          "nodes": [
+            "output_guard",
+            "hooks"
+          ],
+          "nodeCount": 2
+        }
+      ]
+    },
+    "contextManifest": {
+      "sections": [
+        {
+          "name": "session_memory",
+          "source_type": "memory",
+          "content_checksum": "sha256:memory",
+          "metadata": {
+            "memory_count": 1,
+            "skipped_memory_count": 0
+          }
+        },
+        {
+          "name": "rag_context",
+          "source_type": "rag",
+          "content_checksum": "sha256:rag",
+          "metadata": {
+            "chunk_count": 2,
+            "cited_chunk_count": 1,
+            "uncited_chunk_count": 1,
+            "citation_count": 1,
+            "citations": [
+              {
+                "citation_id": "hardening_doc:0",
+                "source_uri": "docs/architecture/agent-harness-operating-model.md",
+                "content_hash": "sha256:hardening_doc_0",
+                "acl_hash": "acl_hash_only"
+              }
+            ]
+          }
+        },
+        {
+          "name": "tool_outputs",
+          "source_type": "tool",
+          "content_checksum": "sha256:tool_outputs",
+          "metadata": {
+            "output_count": 1,
+            "sanitized_count": 1,
+            "findings": [
+              "canary_secret"
+            ]
+          }
+        }
+      ]
+    },
+    "contextManifestDiagnostics": {
+      "ok": true,
+      "status": "passed",
+      "sectionCount": 2,
+      "memoryAdmissionPolicy": {
+        "activeOnly": true,
+        "missingStatusExcluded": true,
+        "tombstonedExcluded": true,
+        "supersededExcluded": true
+      },
+      "memoryCount": 1,
+      "skippedMemoryCount": 0,
+      "skippedMemoryStatusCounts": {},
+      "memoryStatusCounts": {
+        "active": 1
+      },
+      "ragGroundingPolicy": {
+        "citationTracking": "required",
+        "uncitedChunksTracked": true,
+        "aclEvidence": "acl_hash_only",
+        "rawAclMetadataVisible": false
+      },
+      "citationCount": 1,
+      "chunkCount": 2,
+      "citedChunkCount": 1,
+      "uncitedChunkCount": 1,
+      "poisoningCoverage": {
+        "status": "verified",
+        "poisonedChunkCount": 1,
+        "poisoningReasons": [
+          "prompt_injection"
+        ],
+        "source": "rag_tool_context_manifest"
+      },
+      "rawAclMetadataVisible": false,
+      "findings": []
+    },
+    "langchainMiddlewarePolicy": {
+      "status": "applied",
+      "source": "default_code_policy",
+      "policy": {
+        "modelCallRunLimit": 11,
+        "toolCallRunLimit": 10,
+        "modelRetryMaxRetries": 1,
+        "toolRetryMaxRetries": 1,
+        "piiRules": [
+          {
+            "type": "email",
+            "strategy": "redact",
+            "applyToInput": true,
+            "applyToOutput": true,
+            "applyToToolResults": true,
+            "applyToStreamOutput": true
+          },
+          {
+            "type": "url",
+            "strategy": "redact",
+            "applyToInput": true,
+            "applyToOutput": true,
+            "applyToToolResults": true,
+            "applyToStreamOutput": true
+          },
+          {
+            "type": "ip",
+            "strategy": "redact",
+            "applyToInput": true,
+            "applyToOutput": true,
+            "applyToToolResults": true,
+            "applyToStreamOutput": true
+          },
+          {
+            "type": "mac_address",
+            "strategy": "redact",
+            "applyToInput": true,
+            "applyToOutput": true,
+            "applyToToolResults": true,
+            "applyToStreamOutput": true
+          },
+          {
+            "type": "credit_card",
+            "strategy": "block",
+            "applyToInput": true,
+            "applyToOutput": true,
+            "applyToToolResults": true,
+            "applyToStreamOutput": true
+          }
+        ]
+      }
+    },
+    "langchainMiddlewareChain": {
+      "status": "applied",
+      "count": 9,
+      "middleware": [
+        "ModelCallLimitMiddleware",
+        "ToolCallLimitMiddleware",
+        "ModelRetryMiddleware",
+        "ToolRetryMiddleware",
+        "PIIMiddleware",
+        "PIIMiddleware",
+        "PIIMiddleware",
+        "PIIMiddleware",
+        "PIIMiddleware"
+      ],
+      "piiRuleCount": 5,
+      "hitlToolCount": 0,
+      "fallbackModelCount": 0
+    },
+    "langchainSerializationBoundary": {
+      "status": "verified",
+      "sdk": "langchain-core",
+      "unsafeLoadApisForbidden": [
+        "langchain_core.load.load",
+        "langchain_core.load.loads",
+        "langchain_core.prompts.load_prompt",
+        "langchain.chains.loading.load_chain",
+        "langchain.agents.loading.load_agent"
+      ],
+      "secretsFromEnvForbidden": true,
+      "userConfigDeserializationForbidden": true,
+      "trustedJsonOnly": true
+    },
+    "contextManagementLifecycle": {
+      "status": "verified",
+      "framework": "langchain_middleware",
+      "summarizationMiddleware": "SummarizationMiddleware",
+      "contextEditingMiddleware": "ContextEditingMiddleware",
+      "toolSelectionMiddleware": "LLMToolSelectorMiddleware",
+      "providerToolSearchMiddleware": "ProviderToolSearchMiddleware",
+      "contextManifestRequired": true,
+      "contentChecksumsRequired": true,
+      "toolCallPairPreservationRequired": true,
+      "tenantPolicyBeforeContextMutation": true,
+      "auditRecordsContextMutations": true,
+      "rawContextNotInReleaseEvidence": true,
+      "activeToolBudgetEnforced": true,
+      "selectionReasonsAudited": true
+    },
+    "usageCostLifecycle": {
+      "status": "verified",
+      "ledger": "UsageLedgerRecord",
+      "store": "SqlAlchemyUsageLedgerStore",
+      "frameworkUsageSource": "LangChain usage_metadata",
+      "traceUsageSource": "LangSmith token_and_cost_tracking",
+      "metricsSurface": "reactor_model_cost_usd_total",
+      "requiredRecordFields": [
+        "tenant_id",
+        "run_id",
+        "provider",
+        "model",
+        "step_type",
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "estimated_cost_usd"
+      ],
+      "adminReviewSurfaces": [
+        "/api/admin/token-cost/by-session",
+        "/v1/admin/token-cost/by-session",
+        "/api/admin/token-cost/daily",
+        "/v1/admin/token-cost/daily",
+        "/api/admin/token-cost/top-expensive",
+        "/v1/admin/token-cost/top-expensive",
+        "/api/admin/tenant/cost",
+        "/v1/admin/tenant/cost"
+      ],
+      "tenantScoped": true,
+      "runScoped": true,
+      "sessionScoped": true,
+      "modelBreakdownRequired": true,
+      "negativeCostRejected": true,
+      "tokenTotalsValidated": true,
+      "totalTokensMatchesBreakdown": true,
+      "zeroCostRecorded": true,
+      "estimatedCostQuantized": true,
+      "metricsRecorded": true
+    },
+    "checkpointProvenance": {
+      "source": "checkpoint_fork",
+      "forkedFromRunId": "run_hardening_source",
+      "forkedFromThreadId": "thread_hardening_source",
+      "forkedFromCheckpointNs": "reactor-hardening",
+      "forkedFromCheckpointId": "checkpoint_hardening_source",
+      "forkTargetThreadId": "thread_hardening_target",
+      "forkTargetCheckpointNs": "reactor-hardening-fork",
+      "replayCoverage": {
+        "status": "verified",
+        "runtimes": [
+          "langgraph",
+          "langchain_agent",
+          "langgraph_stream",
+          "langchain_agent_stream"
+        ],
+        "configurableKeys": [
+          "thread_id",
+          "checkpoint_ns",
+          "checkpoint_id"
+        ],
+        "ignoredReasons": [
+          "missing_checkpoint_id",
+          "fork_target_mismatch"
+        ],
+        "appliedMetadataFields": [
+          "status",
+          "source",
+          "requestedCheckpointId",
+          "checkpointId",
+          "targetThreadId",
+          "targetCheckpointNs"
+        ]
+      },
+      "diagnosticsSurface": {
+        "status": "verified",
+        "forkApiPaths": [
+          "/v1/runs/{run_id}/fork"
+        ],
+        "stateHistoryApiPaths": [
+          "/api/admin/debug/state-history/{run_id}",
+          "/v1/admin/debug/state-history/{run_id}"
+        ],
+        "diagnosticsApiPaths": [
+          "/api/admin/checkpoints/diagnostics",
+          "/v1/admin/checkpoints/diagnostics"
+        ],
+        "permission": "settings:read",
+        "trustedMetadataKeys": [
+          "source",
+          "forkedFromRunId",
+          "forkedFromThreadId",
+          "forkedFromCheckpointNs",
+          "forkedFromCheckpointId",
+          "forkTargetThreadId",
+          "forkTargetCheckpointNs"
+        ],
+        "userMetadataStrippedKeys": [
+          "source",
+          "checkpointId",
+          "checkpoint_id",
+          "forkedFromRunId",
+          "forkedFromThreadId",
+          "forkedFromCheckpointNs",
+          "forkedFromCheckpointId",
+          "forkTargetThreadId",
+          "forkTargetCheckpointNs"
+        ]
+      }
+    },
+    "structuredOutput": {
+      "format": "JSON",
+      "schemaSource": "metadata.responseSchema",
+      "strategy": "schema_passthrough",
+      "langchainStrategies": [
+        "ProviderStrategy",
+        "ToolStrategy",
+        "schema_type",
+        "none"
+      ],
+      "reactorStrategies": [
+        "schema_passthrough",
+        "json_object_schema",
+        "reactor_boundary"
+      ],
+      "enforcement": "langchain_response_format_and_reactor_boundary",
+      "citationBoundary": {
+        "status": "enforced",
+        "source": "context_manifest",
+        "runtimes": [
+          "langgraph",
+          "langchain_agent",
+          "langchain_agent_stream"
+        ],
+        "requiredMetadata": [
+          "structured_output_allowed_citation_ids",
+          "structured_output_citation_policy",
+          "structured_output_citation_count"
+        ]
+      },
+      "repairBoundary": {
+        "status": "enforced",
+        "maxInvalidInputChars": 8192,
+        "rawInvalidInputIncluded": false
+      },
+      "schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "answer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "answer"
+        ]
+      }
+    }
+  },
+  "generatedAtMs": 1783389646537,
+  "dryRun": false,
+  "summary": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0
+  },
+  "steps": [
+    {
+      "id": "uv-lock",
+      "description": "Dependency lock file is current",
+      "command": [
+        "uv",
+        "lock",
+        "--check"
+      ],
+      "tags": [
+        "dependencies",
+        "static"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 16,
+      "stdout": "",
+      "stderr": "Resolved 143 packages in 3ms\n"
+    },
+    {
+      "id": "ruff-format",
+      "description": "Source formatting is stable",
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "format",
+        "--check"
+      ],
+      "tags": [
+        "format",
+        "static"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 34,
+      "stdout": "498 files already formatted\n",
+      "stderr": ""
+    },
+    {
+      "id": "ruff-check",
+      "description": "Lint and security rules pass",
+      "command": [
+        "uv",
+        "run",
+        "ruff",
+        "check"
+      ],
+      "tags": [
+        "lint",
+        "security",
+        "static"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 34,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "id": "pyright",
+      "description": "Strict type checking passes",
+      "command": [
+        "uv",
+        "run",
+        "pyright"
+      ],
+      "tags": [
+        "static",
+        "types"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 10543,
+      "stdout": "0 errors, 0 warnings, 0 informations\n",
+      "stderr": ""
+    },
+    {
+      "id": "pytest-unit",
+      "description": "Unit suite passes",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "tests/unit",
+        "-q"
+      ],
+      "tags": [
+        "pytest",
+        "unit"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 14976,
+      "stdout": "........................................................................ [  3%]\n........................................................................ [  6%]\n........................................................................ [  9%]\n........................................................................ [ 12%]\n........................................................................ [ 15%]\n........................................................................ [ 18%]\n........................................................................ [ 21%]\n........................................................................ [ 24%]\n........................................................................ [ 27%]\n........................................................................ [ 30%]\n........................................................................ [ 33%]\n........................................................................ [ 36%]\n........................................................................ [ 39%]\n........................................................................ [ 42%]\n........................................................................ [ 45%]\n........................................................................ [ 48%]\n........................................................................ [ 52%]\n........................................................................ [ 55%]\n........................................................................ [ 58%]\n........................................................................ [ 61%]\n........................................................................ [ 64%]\n........................................................................ [ 67%]\n........................................................................ [ 70%]\n........................................................................ [ 73%]\n........................................................................ [ 76%]\n........................................................................ [ 79%]\n........................................................................ [ 82%]\n........................................................................ [ 85%]\n........................................................................ [ 88%]\n........................................................................ [ 91%]\n........................................................................ [ 94%]\n........................................................................ [ 97%]\n.................................................                        [100%]\n2353 passed in 13.91s\n",
+      "stderr": ""
+    },
+    {
+      "id": "pytest-rag-documents-workflow",
+      "description": "RAG documents ask, eval apply, and feedback review workflow sensor passes",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "tests/unit/test_documents_cli.py",
+        "tests/unit/test_eval_regression_suite_apply.py",
+        "-q",
+        "-k",
+        "asks_chat_with_retrieved_rag_context or ask_can_render_summary_output or documents_ask"
+      ],
+      "tags": [
+        "documents",
+        "eval",
+        "feedback",
+        "hardening",
+        "pytest",
+        "rag"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 856,
+      "stdout": ".........                                                                [100%]\n9 passed, 136 deselected in 0.41s\n",
+      "stderr": ""
+    },
+    {
+      "id": "pytest-memory-lifecycle",
+      "description": "Memory lifecycle CLI and shared gate action sensor passes",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "tests/unit/test_memory_cli.py",
+        "tests/unit/test_memory_lifecycle_actions.py",
+        "-q",
+        "-k",
+        "memory_lifecycle or sensitive_recovery_actions or structured_error_body"
+      ],
+      "tags": [
+        "hardening",
+        "memory",
+        "pytest"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1121,
+      "stdout": "...                                                                      [100%]\n3 passed, 17 deselected in 0.60s\n",
+      "stderr": ""
+    },
+    {
+      "id": "pytest-redteam",
+      "description": "Red-team corpus guard regression suite passes",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "tests/unit/test_redteam_corpus.py",
+        "-q"
+      ],
+      "tags": [
+        "hardening",
+        "pytest",
+        "redteam"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 434,
+      "stdout": "...                                                                      [100%]\n3 passed in 0.06s\n",
+      "stderr": ""
+    },
+    {
+      "id": "pytest-hardening",
+      "description": "Hardening suite passes",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "tests/hardening",
+        "-q"
+      ],
+      "tags": [
+        "hardening",
+        "pytest"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 704,
+      "stdout": "................                                                         [100%]\n16 passed in 0.27s\n",
+      "stderr": ""
+    },
+    {
+      "id": "pytest-integration",
+      "description": "Integration suite passes",
+      "command": [
+        "uv",
+        "run",
+        "pytest",
+        "tests/integration",
+        "-q"
+      ],
+      "tags": [
+        "integration",
+        "pytest"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 175636,
+      "stdout": "ssss....................................................s............... [ 14%]\n......................................................................ss [ 29%]\n........................................................................ [ 44%]\n................................................s....................... [ 58%]\n...............................................................s...s..s. [ 73%]\n.............sss....s.........s.............ss.......................... [ 88%]\n.......sss.....s..........................................               [100%]\n=============================== warnings summary ===============================\ntests/integration/test_api.py: 20 warnings\n  /workspace/reactor/.venv/lib/python3.13/site-packages/a2a/utils/proto_utils.py:303: DeprecationWarning: label() is deprecated. Use is_required() or is_repeated() instead.\n    errors = _validate_proto_required_fields_internal(msg)\n\ntests/integration/test_api.py: 30 warnings\n  /workspace/reactor/.venv/lib/python3.13/site-packages/a2a/utils/proto_utils.py:263: DeprecationWarning: label() is deprecated. Use is_required() or is_repeated() instead.\n    sub_errs = _validate_proto_required_fields_internal(val)\n\ntests/integration/test_api.py: 10 warnings\n  /workspace/reactor/.venv/lib/python3.13/site-packages/a2a/utils/proto_utils.py:272: DeprecationWarning: label() is deprecated. Use is_required() or is_repeated() instead.\n    sub_errs = _validate_proto_required_fields_internal(item)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n468 passed, 22 skipped, 60 warnings in 174.68s (0:02:54)\n",
+      "stderr": ""
+    },
+    {
+      "id": "scenario-agent-effect-canary",
+      "description": "Scenario corpus expands: scripts/dev/scenarios/agent-effect-canary.json",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "scripts/dev/validate-scenario-matrix.py",
+        "--scenario-file",
+        "scripts/dev/scenarios/agent-effect-canary.json",
+        "--validate-only",
+        "--report-file",
+        "/var/folders/c6/vccybz6x45s4csc77hq86dpc0000gn/T/scenario-report-agent-effect-canary.json"
+      ],
+      "tags": [
+        "eval",
+        "hardening",
+        "scenario"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 64,
+      "stdout": "Validated 3 scenario cases\n",
+      "stderr": ""
+    },
+    {
+      "id": "scenario-user-activity-matrix",
+      "description": "Scenario corpus expands: scripts/dev/scenarios/user-activity-matrix.json",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "scripts/dev/validate-scenario-matrix.py",
+        "--scenario-file",
+        "scripts/dev/scenarios/user-activity-matrix.json",
+        "--validate-only",
+        "--report-file",
+        "/var/folders/c6/vccybz6x45s4csc77hq86dpc0000gn/T/scenario-report-user-activity-matrix.json"
+      ],
+      "tags": [
+        "eval",
+        "hardening",
+        "scenario"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 73,
+      "stdout": "Validated 366 scenario cases\n",
+      "stderr": ""
+    },
+    {
+      "id": "scenario-integration-golden",
+      "description": "Scenario corpus expands: scripts/dev/scenarios/integration-golden-scenarios.json",
+      "command": [
+        "uv",
+        "run",
+        "python",
+        "scripts/dev/validate-scenario-matrix.py",
+        "--scenario-file",
+        "scripts/dev/scenarios/integration-golden-scenarios.json",
+        "--validate-only",
+        "--report-file",
+        "/var/folders/c6/vccybz6x45s4csc77hq86dpc0000gn/T/scenario-report-integration-golden.json"
+      ],
+      "tags": [
+        "eval",
+        "hardening",
+        "scenario"
+      ],
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 186,
+      "stdout": "Validated 3458 scenario cases\n",
+      "stderr": ""
+    }
+  ]
+}

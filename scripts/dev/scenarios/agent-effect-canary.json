@@ -1,0 +1,67 @@
+{
+  "qualityGates": {
+    "minPassRate": 1.0,
+    "maxFailed": 0,
+    "maxSkipped": 0,
+    "maxRateLimited": 0,
+    "maxAverageDurationMs": 30000,
+    "maxP95DurationMs": 45000,
+    "maxToolsUsedPerCase": 6
+  },
+  "defaults": {
+    "method": "POST",
+    "path": "/api/chat",
+    "timeoutSec": 60,
+    "maxAttempts": 1,
+    "auth": "user",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "expect": {
+      "status": 200,
+      "success": true,
+      "toolsUsedMaxCount": 6,
+      "contentNotRegex": [
+        "(?i)api[_-]?key|password|secret|token"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "id": "casual-no-tool",
+      "tags": ["canary", "tool-exposure"],
+      "json": {
+        "message": "안녕, 오늘 기분 좋게 한 문장으로 인사해줘."
+      },
+      "expect": {
+        "toolsUsedMaxCount": 0
+      }
+    },
+    {
+      "id": "workspace-readonly-routing",
+      "tags": ["canary", "workspace", "readonly"],
+      "json": {
+        "message": "내가 접근 가능한 issue tracker 이슈 중 최근 작업을 요약해줘."
+      },
+      "expect": {
+        "toolsUsedMinCount": 1,
+        "toolsUsedMaxCount": 4,
+        "toolsUsedAny": ["issue_my_open_issues", "issue_search_issues", "issue_list_projects"],
+        "toolsUsedNone": ["issue_create_issue", "issue_transition_issue", "team_chat_send_message"],
+        "contentNotRegex": ["(?i)created issue|transitioned|sent to team chat"]
+      }
+    },
+    {
+      "id": "internal-grounding",
+      "tags": ["canary", "rag", "grounding"],
+      "json": {
+        "message": "Reactor의 Agent Tool Layer가 어떤 역할을 하는지 근거 중심으로 설명해줘."
+      },
+      "expect": {
+        "toolsUsedMaxCount": 6,
+        "contentContainsAny": ["Agent Tool Layer", "tool", "도구"],
+        "contentNotRegex": ["모든 MCP", "무조건"]
+      }
+    }
+  ]
+}

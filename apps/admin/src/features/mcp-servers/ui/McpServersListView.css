@@ -1,0 +1,327 @@
+/* McpServersListView — List page styles
+ * Header chrome migrated to <PageHeader> primitive (shared/ui/PageHeader.tsx).
+ * .mcp-list-header / .mcp-list-header-main / .mcp-list-header-actions
+ * removed — see git history.
+ */
+
+.mcp-fleet-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+  border-block: 1px solid var(--border-subtle);
+  overflow-x: auto;
+}
+
+.mcp-fleet-summary button {
+  min-width: max-content;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.mcp-fleet-summary button:hover,
+.mcp-fleet-summary button:focus-visible {
+  color: var(--text-primary);
+  outline: none;
+}
+
+.mcp-fleet-summary button[aria-pressed='true'] {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-strong);
+}
+
+.mcp-fleet-summary span {
+  font-size: var(--text-xs);
+}
+
+.mcp-fleet-summary strong {
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Filter bar */
+.mcp-filter-bar {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.mcp-search-field {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--bg-input, var(--bg-surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 0 var(--space-3);
+}
+
+.mcp-search-field:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.mcp-search-field > svg {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+}
+
+.mcp-search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  padding: 0.62rem 0;
+  font-family: var(--font);
+  outline: none;
+}
+
+.mcp-search-field button {
+  width: var(--control-height-compact);
+  height: var(--control-height-compact);
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.mcp-filter-bar select {
+  min-width: 140px;
+  background: var(--bg-input, var(--bg-surface));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--text-xs);
+  padding: 0.58rem 0.74rem;
+  font-family: var(--font);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A3B8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: var(--space-8);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    outline-color var(--duration-fast) var(--ease-out);
+}
+
+.mcp-filter-bar select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+.mcp-fleet-maintenance {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.mcp-fleet-maintenance summary {
+  width: fit-content;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+}
+
+.mcp-fleet-maintenance:not([open]) > :not(summary) {
+  display: none;
+}
+
+.mcp-fleet-maintenance__body {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.mcp-fleet-maintenance__body p {
+  max-width: 58ch;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.mcp-fleet-maintenance__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Blocked row styling */
+.mcp-blocked-row {
+  opacity: 0.6;
+}
+
+.mcp-tags-text {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+}
+
+/* Server name cell */
+.mcp-server-name {
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-primary);
+}
+
+.mcp-server-desc {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.mcp-connection-state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.mcp-connection-state > span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: var(--radius-full);
+  background: var(--text-muted);
+}
+
+.mcp-connection-state--connected > span { background: var(--color-success); }
+.mcp-connection-state--failed > span,
+.mcp-connection-state--error > span { background: var(--color-error); }
+.mcp-connection-state--retrying > span,
+.mcp-connection-state--pending > span { background: var(--color-warning); }
+
+.mcp-allowance-state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  white-space: nowrap;
+}
+
+.mcp-allowance-state > span {
+  width: var(--icon-size-xs);
+  height: var(--icon-size-xs);
+  border-radius: var(--radius-full);
+  background: var(--text-muted);
+}
+
+.mcp-allowance-state[data-allowed='true'] > span {
+  background: var(--color-success);
+}
+
+.mcp-allowance-state[data-allowed='false'] > span {
+  background: var(--color-warning);
+}
+
+.mcp-transport-label {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.mcp-fleet-empty {
+  min-height: 11rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  padding: var(--space-6) 0;
+  border-block: 1px solid var(--border-standard);
+}
+
+.mcp-fleet-empty h2 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-md);
+  color: var(--text-primary);
+}
+
+.mcp-fleet-empty p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.mcp-fleet-empty--filtered {
+  min-height: 8rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .mcp-fleet-summary button { flex-basis: 10rem; }
+}
+
+@media (max-width: 640px) {
+  .mcp-fleet-summary {
+    overflow: visible;
+  }
+
+  .mcp-fleet-summary button {
+    min-width: 0;
+    flex: 1 1 0;
+    gap: var(--space-1);
+    justify-content: center;
+    padding-inline: var(--space-2);
+  }
+
+  .mcp-fleet-summary strong {
+    font-size: var(--text-md);
+  }
+
+  .mcp-filter-bar {
+    flex-direction: column;
+  }
+
+  .mcp-search-field,
+  .mcp-filter-bar select {
+    width: 100%;
+  }
+
+  .mcp-fleet-empty {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mcp-fleet-maintenance__actions {
+    display: grid;
+  }
+}
+
+/* Reduced-motion: neutralise transitions/animations on the MCP servers list.
+   The global safety net in src/index.css clamps durations; this scoped guard
+   removes them entirely so filter/sort interactions feel instantaneous. */
+@media (prefers-reduced-motion: reduce) {
+  .mcp-fleet-summary *,
+  .mcp-fleet-summary *::before,
+  .mcp-fleet-summary *::after,
+  .mcp-filter-bar *,
+  .mcp-filter-bar *::before,
+  .mcp-filter-bar *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

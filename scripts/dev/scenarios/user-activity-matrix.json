@@ -1,0 +1,201 @@
+{
+  "defaults": {
+    "method": "POST",
+    "path": "/api/chat",
+    "auth": "user",
+    "timeoutSec": 45,
+    "maxAttempts": 2,
+    "json": {
+      "message": "health check {{run_id}}",
+      "metadata": {
+        "sessionId": "{{run_id}}-default",
+        "channel": "web",
+        "source": "scenario-matrix",
+        "activity": "baseline"
+      }
+    },
+    "expect": {
+      "status": 200
+    }
+  },
+  "scenarios": [
+    {
+      "id": "auth-chat-unauth-blocked",
+      "tags": ["contract", "auth"],
+      "auth": "none",
+      "json": {
+        "message": "auth check {{run_id}}"
+      },
+      "expect": {
+        "status": 401
+      }
+    },
+    {
+      "id": "auth-user-models-ok",
+      "tags": ["contract", "auth"],
+      "method": "GET",
+      "path": "/api/models",
+      "json": null,
+      "expect": {
+        "status": 200,
+        "jsonExists": ["models", "defaultModel"]
+      }
+    },
+    {
+      "id": "auth-user-mcp-list-forbidden",
+      "tags": ["contract", "auth", "admin-boundary"],
+      "method": "GET",
+      "path": "/api/mcp/servers",
+      "json": null,
+      "expect": {
+        "status": 403,
+        "contentRegexAny": [
+          "(?i)admin access required",
+          "(?i)forbidden"
+        ]
+      }
+    },
+    {
+      "id": "auth-admin-mcp-list-ok",
+      "tags": ["contract", "auth", "admin"],
+      "method": "GET",
+      "path": "/api/mcp/servers",
+      "auth": "admin",
+      "json": null,
+      "expect": {
+        "status": 200,
+        "jsonRegex": {
+          "0.name": "integration",
+          "0.status": "CONNECTED"
+        }
+      }
+    },
+    {
+      "id": "validation-chat-blank-message",
+      "tags": ["contract", "validation"],
+      "json": {
+        "message": " "
+      },
+      "expect": {
+        "status": 400,
+        "contentRegexAny": [
+          "message must not be blank",
+          "Validation failed"
+        ]
+      }
+    },
+    {
+      "id": "tool-unavailable-guidance",
+      "tags": ["tool", "contract", "unavailable"],
+      "json": {
+        "message": "You must call code_host_list_repositories exactly once and summarize.",
+        "metadata": {
+          "sessionId": "{{run_id}}-unavailable-tool",
+          "channel": "web",
+          "source": "scenario-matrix",
+          "activity": "fallback"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedNone": ["code_host_list_repositories"],
+        "contentRegexAny": [
+          "(?i)not available",
+          "(?i)do not include",
+          "(?i)cannot fulfill"
+        ]
+      }
+    },
+    {
+      "id": "integration-stable-tool-matrix",
+      "tags": ["tool", "integration", "matrix", "stable"],
+      "matrix": {
+        "tool_name": [
+          "issue_search_issues",
+          "work_morning_briefing",
+          "knowledge_search",
+          "knowledge_create_page",
+          "issue_transition_issue",
+          "code_host_add_pr_comment",
+          "issue_update_issue",
+          "issue_link_issues",
+          "issue_due_soon_issues",
+          "work_delete_briefing_profile",
+          "work_set_briefing_profile",
+          "code_host_review_sla_alerts",
+          "issue_list_projects"
+        ],
+        "channel": ["web", "team_chat", "api"],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ]
+      },
+      "json": {
+        "message": "You must call the exact tool {{tool_name}} once. If required args are unknown, infer safe defaults and continue. Return one-sentence summary.",
+        "metadata": {
+          "sessionId": "{{run_id}}-{{tool_name}}-{{channel}}-{{activity}}",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "source": "scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": ["{{tool_name}}"]
+      }
+    },
+    {
+      "id": "integration-limited-tool-matrix",
+      "tags": ["tool", "integration", "matrix", "known-limited"],
+      "matrix": {
+        "tool_name": [
+          "knowledge_create_weekly_auto_summary_page",
+          "code_host_get_pr",
+          "knowledge_create_runbook",
+          "knowledge_get_page_content",
+          "knowledge_create_weekly_status_report",
+          "knowledge_create_sprint_summary",
+          "work_release_readiness_pack"
+        ],
+        "channel": ["web", "team_chat", "api"],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ]
+      },
+      "json": {
+        "message": "You must call the exact tool {{tool_name}} once. If required args are unknown, ask me for missing required inputs in one sentence.",
+        "metadata": {
+          "sessionId": "{{run_id}}-limited-{{tool_name}}-{{channel}}-{{activity}}",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "source": "scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedNone": ["{{tool_name}}"],
+        "contentRegexAny": [
+          "(?i)provide",
+          "(?i)required",
+          "(?i)need",
+          "(?i)missing",
+          "(?i)what is",
+          "\\?$"
+        ]
+      }
+    }
+  ]
+}

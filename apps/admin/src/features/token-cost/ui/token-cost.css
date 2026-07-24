@@ -1,0 +1,142 @@
+/* ═══════════════════════════════════════════════════════════════
+   Token Cost — inline badges and summary panel
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── TokenCostBadge ── */
+.token-cost-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  color: var(--text-muted);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--accent-dim);
+  white-space: nowrap;
+}
+
+.token-cost-badge-tokens {
+  font-weight: var(--font-weight-emphasis);
+}
+
+.token-cost-badge-separator {
+  color: var(--text-dim);
+}
+
+.token-cost-badge-cost {
+  color: var(--accent);
+  font-weight: var(--font-weight-emphasis);
+}
+
+/* ── CostSummaryPanel ── */
+.cost-summary-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--panel-pad);
+  margin-bottom: var(--section-gap);
+}
+
+.cost-summary-title {
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-strong);
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.cost-summary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.cost-summary-stats {
+  display: flex;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-4);
+}
+
+.cost-summary-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cost-summary-stat-label {
+  font-size: var(--text-xxs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cost-summary-stat-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-strong);
+  color: var(--text-primary);
+}
+
+.cost-summary-subtitle {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.cost-summary-breakdown {
+  margin-bottom: var(--space-4);
+}
+
+.cost-summary-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.cost-summary-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cost-summary-breakdown-row:last-child {
+  border-bottom: none;
+}
+
+.cost-summary-breakdown-model {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent);
+  font-weight: var(--font-weight-emphasis);
+}
+
+.cost-summary-breakdown-detail {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.cost-summary-chart {
+  margin-top: var(--space-3);
+}
+
+/* ── Show costs toggle in session detail ── */
+.cost-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.cost-toggle-label {
+  cursor: pointer;
+  user-select: none;
+}

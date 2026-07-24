@@ -1,0 +1,194 @@
+/* -- Latency Dashboard Layout ---------------------------------------------- */
+
+.latency-dashboard__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.latency-dashboard__summary-skeleton {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+@media (max-width: 960px) {
+  .latency-dashboard__summary-skeleton {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .latency-dashboard__summary-skeleton {
+    grid-template-columns: 1fr;
+  }
+}
+
+.latency-dashboard__summary {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-6);
+  padding: 0;
+}
+
+.latency-dashboard__summary > div {
+  min-width: 0;
+  padding: var(--surface-panel-padding-compact);
+  background: var(--surface-panel);
+  border: 1px solid var(--surface-panel-border);
+  border-radius: var(--surface-panel-radius);
+}
+
+.latency-dashboard__summary dt {
+  margin-bottom: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.latency-dashboard__summary dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-emphasis);
+  font-variant-numeric: tabular-nums;
+}
+
+.latency-dashboard__summary-primary {
+  background: var(--surface-feedback) !important;
+}
+
+.latency-dashboard__summary-primary span {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+@media (max-width: 720px) {
+  .latency-dashboard__summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .latency-dashboard__summary { grid-template-columns: 1fr; }
+}
+
+.latency-dashboard__chart {
+  padding: 0;
+  margin-bottom: var(--space-4);
+}
+
+.latency-dashboard__chart-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-4);
+}
+
+/* -- SLO Panel ------------------------------------------------------------- */
+
+.slo-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  /* Color-only transition uses --duration-fast/--ease-out per token guidance. */
+  transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+/* Accent edge when a child interactive element gains keyboard focus —
+   matches .latency-dashboard__chart so both monitoring panels lift the
+   same way as the user tabs through the dashboard. */
+.slo-panel:focus-within {
+  border-color: var(--accent-shadow-sm);
+}
+
+.slo-panel__title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 var(--space-3);
+}
+
+.slo-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 700px) {
+  .slo-panel__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.slo-metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.slo-metric__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.slo-metric__label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.slo-metric__value {
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-primary);
+}
+
+.slo-metric__hint {
+  font-size: var(--text-xs);
+  color: var(--text-dim);
+}
+
+.slo-bar-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.slo-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+.slo-bar--green { background: var(--green); }
+.slo-bar--yellow { background: var(--yellow); }
+.slo-bar--red { background: var(--red); }
+
+.slo-value--green { color: var(--green); }
+.slo-value--yellow { color: var(--yellow); }
+.slo-value--red { color: var(--red); }
+
+
+/* Reduced motion: width transitions on bars + new border-color transitions
+   on the chart/SLO panels are decorative — kill them. Selectors target the
+   actual class prefixes used by this feature (no `.latency-dashboard`
+   parent wrapper exists in the DOM). */
+@media (prefers-reduced-motion: reduce) {
+  [class^="latency-dashboard__"],
+  [class*=" latency-dashboard__"],
+  [class^="slo-"],
+  [class*=" slo-"] {
+    transition: none !important;
+    animation: none !important;
+  }
+}

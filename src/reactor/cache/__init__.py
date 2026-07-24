@@ -1,0 +1,1 @@
+"""Ephemeral response cache contracts."""

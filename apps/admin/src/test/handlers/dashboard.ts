@@ -1,0 +1,361 @@
+import { http, HttpResponse } from 'msw'
+import { NOW, HOUR, DAY } from './shared'
+
+export const mockDashboard = {
+  generatedAt: NOW,
+  ragEnabled: true,
+  mcp: {
+    total: 2,
+    statusCounts: { CONNECTED: 1, DISCONNECTED: 1 },
+  },
+  scheduler: {
+    totalJobs: 3,
+    enabledJobs: 2,
+    runningJobs: 0,
+    failedJobs: 0,
+    attentionBacklog: 0,
+    agentJobs: 1,
+  },
+  recentSchedulerExecutions: [
+    {
+      id: 'exec-1',
+      jobId: 'job-1',
+      jobName: 'Daily Digest',
+      jobType: 'AGENT',
+      status: 'SUCCESS',
+      resultPreview: 'Generated digest with 12 items from Jira and Confluence',
+      failureReason: null,
+      dryRun: false,
+      durationMs: 15400,
+      startedAt: NOW - 14 * HOUR,
+      completedAt: NOW - 14 * HOUR + 15400,
+    },
+    {
+      id: 'exec-2',
+      jobId: 'job-2',
+      jobName: 'Swagger Sync',
+      jobType: 'MCP_TOOL',
+      status: 'SUCCESS',
+      resultPreview: 'Synced 3 spec sources, 0 changes detected',
+      failureReason: null,
+      dryRun: false,
+      durationMs: 4200,
+      startedAt: NOW - 26 * HOUR,
+      completedAt: NOW - 26 * HOUR + 4200,
+    },
+  ],
+  approvals: { pendingCount: 2 },
+  responseTrust: {
+    unverifiedResponses: 3,
+    outputGuardRejected: 1,
+    outputGuardModified: 2,
+    boundaryFailures: 0,
+  },
+  employeeValue: {
+    observedResponses: 248,
+    groundedResponses: 231,
+    groundedRatePercent: 93.1,
+    blockedResponses: 4,
+    interactiveResponses: 195,
+    scheduledResponses: 53,
+    answerModes: { grounded: 231, blocked: 4, fallback: 13 },
+    channels: [
+      { key: 'slack', count: 180 },
+      { key: 'web', count: 52 },
+      { key: 'api', count: 16 },
+    ],
+    lanes: [
+      { answerMode: 'grounded', observedResponses: 231, groundedResponses: 231, blockedResponses: 0, groundedRatePercent: 100 },
+      { answerMode: 'fallback', observedResponses: 13, groundedResponses: 0, blockedResponses: 0, groundedRatePercent: 0 },
+      { answerMode: 'blocked', observedResponses: 4, groundedResponses: 0, blockedResponses: 4, groundedRatePercent: 0 },
+    ],
+    toolFamilies: [
+      { key: 'jira', count: 95 },
+      { key: 'confluence', count: 72 },
+      { key: 'web_search', count: 45 },
+      { key: 'calculator', count: 18 },
+      { key: 'bitbucket', count: 12 },
+    ],
+    topMissingQueries: [
+      { queryCluster: 'deployment_status', queryLabel: 'What is the deployment status?', count: 8, lastOccurredAt: NOW - 4 * HOUR, blockReason: 'No matching tool or knowledge base entry' },
+      { queryCluster: 'oncall_schedule', queryLabel: 'Who is on call this week?', count: 5, lastOccurredAt: NOW - DAY, blockReason: 'PagerDuty integration not configured' },
+    ],
+  },
+  recentTrustEvents: [
+    { occurredAt: NOW - HOUR, type: 'OUTPUT_GUARD_REJECT', severity: 'WARNING', action: 'REJECT', reason: 'PII detected in response', policy: 'pii-filter' },
+    { occurredAt: NOW - 3 * HOUR, type: 'OUTPUT_GUARD_MODIFY', severity: 'INFO', action: 'MASK', reason: 'Email address masked', policy: 'email-mask' },
+    { occurredAt: NOW - 6 * HOUR, type: 'BOUNDARY_CHECK', severity: 'INFO', stage: 'pre-response', channel: 'slack', queryCluster: 'general_qa' },
+  ],
+  metrics: [
+    { name: 'api.requests.total', meterCount: 1, measurements: { count: 1842, rate_1m: 2.3 } },
+    { name: 'api.latency.p99', meterCount: 1, measurements: { value: 425 } },
+    { name: 'mcp.tool_calls.total', meterCount: 1, measurements: { count: 356 } },
+    { name: 'tokens.consumed.total', meterCount: 1, measurements: { count: 2450000 } },
+  ],
+  releaseReadiness: {
+    status: 'eligible_with_warnings',
+    recommendedTag: 'v1.1.0',
+    recommendedVersionBump: 'minor',
+    minorEligible: true,
+    blockingReports: [],
+    warningReports: ['hardening_suite'],
+    warnings: [
+      {
+        name: 'hardening_suite',
+        status: 'review_required',
+        source: 'memoryMaintenanceLifecycle.dependencyWarnings',
+        remediation: 'review LangMem/trustcall/LangGraph dependency update',
+        remediationCommand: 'monitor upstream trustcall/langmem compatibility; keep dependency warning visible until trustcall stops importing langgraph.constants.Send or Reactor replaces the dependency path',
+        reviewCommand: 'uv pip show langmem trustcall langgraph',
+        findings: [
+          {
+            package: 'trustcall',
+            module: 'trustcall._base',
+            deprecatedImport: 'langgraph.constants.Send',
+            replacement: 'langgraph.types.Send',
+            severity: 'warning',
+          },
+        ],
+      },
+    ],
+    tagRecommendation: {
+      status: 'eligible_with_warnings',
+      eligible: true,
+      latestTag: 'v1.0.14',
+      recommendedTag: 'v1.1.0',
+      recommendedVersionBump: 'minor',
+      minorEligible: true,
+      minorBoundaryReports: ['langsmith_eval_sync'],
+      passedReports: ['smoke_run', 'release_evidence', 'hardening_suite', 'langsmith_eval_sync'],
+      warningReports: ['hardening_suite'],
+      warningReviewRequired: true,
+      nextAction: 'review release readiness warnings, then verify clean worktree and choose the next minor version tag',
+      releaseReadinessCommand: 'uv run reactor-release-smoke-run --readiness-output reports/release-readiness.json',
+    },
+    requiredReports: ['smoke_run', 'release_evidence', 'hardening_suite', 'langsmith_eval_sync'],
+    missingReports: [],
+    requiredEnvAnyOf: [
+      ['LANGSMITH_API_KEY', 'REACTOR_OBSERVABILITY_LANGSMITH_API_KEY'],
+      ['REACTOR_A2A_BASE_URL'],
+    ],
+    missingEnvAnyOf: [],
+    recommendedEnv: ['OPENAI_API_KEY', 'REACTOR_SLACK_BOT_TOKEN', 'REACTOR_SLACK_SIGNING_SECRET'],
+    gates: [
+      { id: 'rag', status: 'passed' },
+      { id: 'feedback', status: 'passed' },
+      { id: 'langsmith', status: 'passed' },
+      { id: 'slack', status: 'passed' },
+      { id: 'a2a', status: 'passed' },
+      { id: 'provider', status: 'passed' },
+    ],
+    langsmithSync: {
+      datasetName: 'reactor-release-regression',
+      exampleCount: 12,
+      caseCount: 12,
+      exampleIds: ['example-1', 'example-2'],
+      caseIds: ['case-1', 'case-2'],
+      metadataCaseIds: ['case-1', 'case-2'],
+      splitCounts: { regression: 12 },
+      secretFree: true,
+      sdkContract: 'Client.create_dataset/create_example',
+      sdkContractFields: {
+        datasetApi: 'Client.create_dataset',
+        exampleApi: 'Client.create_example',
+        metadataApi: 'Client.create_example.metadata',
+      },
+      exampleContract: {
+        metadataOnly: true,
+        secretScan: 'passed',
+        requiredMetadata: ['case_id', 'split', 'source_suite'],
+      },
+    },
+    ragIngestionLifecycle: {
+      status: 'verified',
+      framework: 'langchain-postgres',
+      vectorStore: 'PGVector',
+      embeddingBoundary: 'provider-managed embeddings with ACL-aware manifests',
+      poisoningEvalCaseIds: ['case_rag_ingest_poisoning_guard'],
+      diagnosticsSurface: {
+        status: 'verified',
+        apiPaths: ['/api/admin/rag/diagnostics', '/api/admin/rag/candidates'],
+        releaseReviewFields: ['ragIngestionLifecycle', 'researchAnswerContract'],
+      },
+      verificationSensors: {
+        covers: ['ingest', 'ask', 'cited_answer', 'weak_answer_promotion'],
+        focusedTests: ['tests/integration/test_rag_ingestion_lifecycle.py'],
+        releaseReadinessContracts: ['rag_ingestion_lifecycle', 'research_answer_contract'],
+      },
+      researchAnswerContract: {
+        profile: 'grounded_research',
+        citationStyle: 'manifest_ids',
+        requiresCitationIds: true,
+        requiresSourceLabels: true,
+        fallbackResponseIncludesSources: true,
+        uncitedClaimsAllowed: false,
+        tracksMissingChunks: true,
+        tracksContentHashMismatches: true,
+      },
+    },
+    feedbackReviewQueue: {
+      status: 'passed',
+      reviewStatus: 'reviewed',
+      reviewNote: 'feedback inbox reviewed and promoted into regression coverage',
+      candidateTag: 'case_rag_candidate_grounded_citation',
+      caseIds: ['case_rag_candidate_grounded_citation'],
+      reviewTags: ['release-gate', 'grounded-citation'],
+      feedbackRatingCounts: { positive: 3, negative: 1 },
+      feedbackSourceCounts: { slack: 2, admin: 2 },
+      workflowTagCounts: { rag: 4 },
+      expectedCitationCounts: { required: 4 },
+    },
+    slackGatewaySmoke: {
+      status: 'verified',
+      gateway: 'native-slack-gateway',
+      ingress: 'socket-mode',
+      currentThreadReplyRoute: 'chat.postMessage',
+      signatureVerificationRequired: true,
+      responseUrlRouteSupported: true,
+      mcpWriteOverlapForbidden: true,
+      requiredChecks: ['events_ack', 'reply_route', 'feedback_action'],
+    },
+    a2aProtocol: {
+      status: 'verified',
+      agentCard: {
+        name: 'reactor-a2a-agent',
+        interfaceCount: 2,
+        interfaceProtocolBindings: ['jsonrpc', 'http'],
+        interfaceProtocolVersions: ['1.0'],
+        wellKnownPath: '/.well-known/agent-card.json',
+      },
+      diagnostics: {
+        sdkAvailable: true,
+        protocolVersion: '1.0',
+        path: '/api/a2a/tasks',
+      },
+      protocolNegotiation: {
+        requestHeader: 'A2A-Version',
+        requestedVersion: '1.0',
+        responseVersion: '1.0',
+        majorMinorOnly: true,
+        agentCardVersionsChecked: true,
+        serverGeneratedTaskIds: true,
+        sdkFastApiSurface: true,
+        telemetryInstrumentation: 'otel',
+      },
+      taskApi: {
+        status: 'verified',
+        taskStatus: 'completed',
+        path: '/api/a2a/tasks',
+      },
+      operationalEvidence: {
+        auditRecorded: true,
+        idempotencyEnforced: true,
+        telemetryEnabled: true,
+        pushOutboxRouted: true,
+      },
+      secretFree: true,
+      tlsRequired: true,
+    },
+    backendProviderIntegration: {
+      status: 'verified',
+      provider: 'ollama',
+      model: 'gemma4:12b',
+      requiredChecks: ['required_env', 'tracing_config', 'chat_model_invoke', 'usage_metadata'],
+      usageMetadata: {
+        source: 'LangChain AIMessage.usage_metadata',
+        present: true,
+        inputTokens: 20,
+        outputTokens: 63,
+        totalTokens: 83,
+        totalMatchesBreakdown: true,
+      },
+    },
+    dependencyWarnings: {
+      status: 'review_required',
+      source: 'memoryMaintenanceLifecycle.dependencyWarnings',
+      warningReports: ['hardening_suite'],
+      warningReviewRequired: true,
+      checkedPackages: ['langmem', 'trustcall', 'langgraph'],
+      installedVersions: {
+        langmem: '0.0.30',
+        trustcall: '0.0.39',
+        langgraph: '1.2.7',
+      },
+      directPins: {
+        langmem: '==0.0.30',
+        langgraph: '==1.2.7',
+      },
+      pinSource: 'pyproject.toml',
+      findings: [
+        {
+          package: 'trustcall',
+          module: 'trustcall._base',
+          deprecatedImport: 'langgraph.constants.Send',
+          replacement: 'langgraph.types.Send',
+          severity: 'warning',
+        },
+      ],
+      findingCount: 1,
+      reviewCommand: 'uv pip show langmem trustcall langgraph',
+      remediationCommand: 'monitor upstream trustcall/langmem compatibility; keep dependency warning visible until trustcall stops importing langgraph.constants.Send or Reactor replaces the dependency path',
+      resolverCheck: {
+        status: 'no_lockfile_changes',
+        command: 'uv lock --upgrade-package langmem --upgrade-package trustcall --upgrade-package langgraph --dry-run',
+        latestKnownFrom: 'resolver',
+      },
+    },
+  },
+}
+
+function getMockDashboard() {
+  return {
+    ...mockDashboard,
+    recentSchedulerExecutions: [
+      {
+        ...mockDashboard.recentSchedulerExecutions[0],
+        jobName: '일일 요약',
+        resultPreview: 'Jira와 Confluence에서 12개 항목으로 요약 생성 완료',
+      },
+      {
+        ...mockDashboard.recentSchedulerExecutions[1],
+        jobName: 'Swagger 동기화',
+        resultPreview: '3개 스펙 소스 동기화 완료, 변경 사항 없음',
+      },
+    ],
+    employeeValue: {
+      ...mockDashboard.employeeValue,
+      topMissingQueries: [
+        { queryCluster: 'deployment_status', queryLabel: '배포 상태가 어떻게 되나요?', count: 8, lastOccurredAt: NOW - 4 * HOUR, blockReason: '일치하는 도구 또는 지식 베이스 항목 없음' },
+        { queryCluster: 'oncall_schedule', queryLabel: '이번 주 당직자가 누구인가요?', count: 5, lastOccurredAt: NOW - DAY, blockReason: 'PagerDuty 연동 미설정' },
+      ],
+    },
+    recentTrustEvents: [
+      { occurredAt: NOW - HOUR, type: 'OUTPUT_GUARD_REJECT', severity: 'WARNING', action: 'REJECT', reason: '응답에서 개인정보 감지됨', policy: 'pii-filter' },
+      { occurredAt: NOW - 3 * HOUR, type: 'OUTPUT_GUARD_MODIFY', severity: 'INFO', action: 'MASK', reason: '이메일 주소 마스킹됨', policy: 'email-mask' },
+      { occurredAt: NOW - 6 * HOUR, type: 'BOUNDARY_CHECK', severity: 'INFO', stage: 'pre-response', channel: 'slack', queryCluster: 'general_qa' },
+    ],
+  }
+}
+
+export const mockMetricNames = [
+  'api.requests.total',
+  'api.latency.p99',
+  'api.latency.p50',
+  'mcp.tool_calls.total',
+  'mcp.tool_calls.errors',
+  'tokens.consumed.total',
+  'tokens.consumed.input',
+  'tokens.consumed.output',
+  'sessions.active',
+  'feedback.positive_rate',
+]
+
+export const dashboardHandlers = [
+  http.get('/api/ops/dashboard', () => {
+    return HttpResponse.json(getMockDashboard())
+  }),
+
+  http.get('/api/ops/metrics/names', () => {
+    return HttpResponse.json(mockMetricNames)
+  }),
+]

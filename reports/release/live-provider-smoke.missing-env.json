@@ -1,0 +1,1 @@
+{"checks":{"required_env":{"missing":["OPENAI_API_KEY"],"status":"failed","variables":["OPENAI_API_KEY"]}},"error":"missing required provider environment","model":"gpt-5-mini","ok":false,"provider":"openai","scope":"live","status":"skipped"}

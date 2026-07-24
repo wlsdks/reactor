@@ -1,0 +1,38 @@
+.tenant-roster { display: grid; gap: var(--space-7); }
+.tenant-roster__section + .tenant-roster__section { padding-top: var(--space-7); border-top: 1px solid var(--border); }
+.tenant-roster__heading { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-4); }
+.tenant-roster__heading h2 { margin: 0; color: var(--text-primary); font-size: var(--text-lg); letter-spacing: -0.01em; }
+.tenant-roster__heading p { margin: var(--space-1) 0 0; color: var(--text-muted); font-size: var(--text-sm); }
+.tenant-roster__actions { display: flex; gap: var(--space-2); align-items: center; }
+.tenant-roster__name { color: var(--text-primary); font-weight: var(--font-weight-emphasis); }
+.tenant-roster__secondary { color: var(--text-muted); font-size: var(--text-sm); }
+.tenant-status { display: inline-flex; align-items: center; gap: var(--space-2); color: var(--text-secondary); font-size: var(--text-sm); }
+.tenant-status > span { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); }
+.tenant-status.is-active > span { background: var(--green); }
+.tenant-status.is-suspended > span { background: var(--yellow); }
+.tenant-create { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(160px, .5fr) auto; align-items: end; gap: var(--space-3); margin-bottom: var(--space-5); padding: var(--space-4) 0; border-block: 1px solid var(--border); }
+.tenant-create label { display: grid; gap: var(--space-2); color: var(--text-secondary); font-size: var(--text-sm); }
+.tenant-create input, .tenant-create select { width: 100%; }
+.tenant-detail { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-5); }
+.tenant-detail dl { display: flex; flex: 1; flex-wrap: wrap; gap: var(--space-4) var(--space-7); margin: 0; }
+.tenant-detail dl > div { flex: 0 1 9rem; min-width: 0; }
+.tenant-detail dt { color: var(--text-muted); font-size: var(--text-xs); }
+.tenant-detail dd { margin: var(--space-1) 0 0; color: var(--text-primary); font-size: var(--text-sm); }
+.tenant-detail__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: flex-end; }
+@media (max-width: 900px) {
+  .tenant-create { grid-template-columns: 1fr 1fr; }
+  .tenant-detail { align-items: flex-start; flex-direction: column; }
+  .tenant-detail dl { width: 100%; }
+  .tenant-detail__actions { justify-content: flex-start; }
+}
+@media (max-width: 600px) {
+  .tenant-roster { gap: var(--space-5); }
+  .tenant-roster__section + .tenant-roster__section { padding-top: var(--space-5); }
+  .tenant-roster__heading { align-items: flex-start; flex-direction: column; }
+  .tenant-roster__actions { width: 100%; }
+  .tenant-roster__actions .btn { flex: 1; }
+  .tenant-create { grid-template-columns: 1fr; }
+  .tenant-detail dl > div { flex-basis: 100%; }
+  .tenant-detail__actions { width: 100%; }
+  .tenant-detail__actions .btn { flex: 1; }
+}

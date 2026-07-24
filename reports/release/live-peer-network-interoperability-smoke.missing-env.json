@@ -1,0 +1,1 @@
+{"checks":{"base_url":{"missing":["REACTOR_A2A_BASE_URL"],"status":"failed"}},"error":"missing required A2A base URL","ok":false,"scope":"live","status":"skipped"}

@@ -1,0 +1,114 @@
+.config-toolbar {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  margin: 0;
+}
+
+.config-toolbar__field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.config-toolbar__label {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.config-toolbar__label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.config-toolbar__select {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-input);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    outline-color var(--duration-fast) var(--ease-out);
+}
+
+.config-toolbar__select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+/* Placeholder styling: when no explicit selection has been made
+   (value === ''), render the select text in a dimmed tone so it reads
+   as "not selected" rather than an active choice. */
+.config-toolbar__select--placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+.config-toolbar__select--placeholder:focus {
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+/* Options inside the dropdown should always render in the primary
+   text color, not the dim placeholder color. */
+.config-toolbar__select option {
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+.config-toolbar__notice {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.config-toolbar__notice strong {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+}
+
+.config-toolbar__notice p {
+  margin: var(--space-1) 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+
+.config-toolbar__notice .btn {
+  justify-self: start;
+}
+
+.config-toolbar__field-unavailable {
+  min-height: var(--control-height-default);
+  display: flex;
+  align-items: center;
+  padding-inline: var(--space-3);
+  color: var(--text-muted);
+  background: var(--surface-panel-muted);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+/* Reduced-motion: drop hover/focus transitions inside the toolbar. The global
+   safety net in src/index.css already clamps durations; this scoped override
+   removes the transition entirely so state changes feel instantaneous. */
+@media (prefers-reduced-motion: reduce) {
+  .config-toolbar,
+  .config-toolbar *,
+  .config-toolbar *::before,
+  .config-toolbar *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}

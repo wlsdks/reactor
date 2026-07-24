@@ -1,0 +1,82 @@
+{
+  "cases": [
+    {
+      "id": "case_rag_candidate_grounded_citation",
+      "name": "RAG ingestion candidate answer should cite the ingested source",
+      "userInput": "How should Reactor cite RAG ingestion candidate answers?",
+      "expectedAnswerContains": ["[candidate-runbook.md]"],
+      "forbiddenAnswerContains": ["uncited answer", "private ledger"],
+      "expectedToolNames": ["Rag:hybrid_search"],
+      "forbiddenToolNames": ["Shell:exec", "message_send"],
+      "expectedExposedToolNames": ["Rag:hybrid_search"],
+      "forbiddenExposedToolNames": ["Shell:exec", "message_send"],
+      "maxToolExposureCount": 1,
+      "agentType": "standard",
+      "model": "test-model",
+      "enabled": true,
+      "tags": [
+        "rag",
+        "documents-ask",
+        "collection:rag-ingestion-candidate",
+        "expected-citation:candidate-runbook.md",
+        "feedback-rating:thumbs_down",
+        "feedback-source:slack_button"
+      ],
+      "minScore": 1.0,
+      "sourceRunId": "run_rag_candidate_grounded_citation"
+    }
+  ],
+  "runs": [
+    {
+      "runId": "run_rag_candidate_grounded_citation",
+      "evalCaseId": "case_rag_candidate_grounded_citation",
+      "userInput": "How should Reactor cite RAG ingestion candidate answers?",
+      "agentType": "standard",
+      "model": "test-model",
+      "finalAnswer": "[candidate-runbook.md] 기준으로 RAG ingestion candidate 답변은 출처 라벨을 포함해야 합니다.",
+      "toolCalls": [
+        {
+          "step": 1,
+          "toolName": "Rag:hybrid_search",
+          "arguments": {"query": "RAG ingestion candidate citation"},
+          "success": true
+        }
+      ],
+      "toolExposure": {"count": 1, "names": ["Rag:hybrid_search"]},
+      "retrievedChunks": [
+        {
+          "rank": 1,
+          "documentId": "rag-ingestion-candidate-baseline",
+          "source": "candidate-runbook.md",
+          "title": "RAG Ingestion Candidate Runbook",
+          "score": 0.91,
+          "cited": true
+        }
+      ],
+      "contextManifestDiagnostics": {
+        "ok": true,
+        "status": "passed",
+        "ragGroundingPolicy": {
+          "citationTracking": "required",
+          "uncitedChunksTracked": true,
+          "aclEvidence": "acl_hash_only",
+          "rawAclMetadataVisible": false
+        },
+        "citationCount": 1,
+        "chunkCount": 1,
+        "citedChunkCount": 1,
+        "uncitedChunkCount": 0,
+        "memoryStatusCounts": {"active": 1},
+        "skippedMemoryStatusCounts": {},
+        "citations": [
+          {
+            "citationId": "candidate-runbook.md",
+            "evalCaseId": "case_rag_candidate_grounded_citation",
+            "workflowTags": ["rag-candidate:grounded_citation"]
+          }
+        ]
+      },
+      "errors": []
+    }
+  ]
+}

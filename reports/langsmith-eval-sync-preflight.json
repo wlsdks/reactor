@@ -1,0 +1,292 @@
+{
+  "blockedNextActionIds": [
+    "sync-langsmith"
+  ],
+  "caseIds": [
+    "case_rag_candidate_grounded_citation"
+  ],
+  "caseSourceRunIds": {
+    "case_rag_candidate_grounded_citation": "run_rag_candidate_grounded_citation"
+  },
+  "datasetName": "reactor-rag-ingestion-candidate",
+  "dryRun": false,
+  "evidence": {
+    "artifact": "reports/langsmith-eval-sync-preflight.json",
+    "blockedNextActionIds": [
+      "sync-langsmith"
+    ],
+    "datasetName": "reactor-rag-ingestion-candidate",
+    "liveSyncCommand": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+    "missingEnvAnyOf": [
+      "LANGSMITH_API_KEY|REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+    ],
+    "mode": "langsmith_dataset_sync_preflight",
+    "nextActionStates": {
+      "rerun-preflight-langsmith": "ready",
+      "sync-langsmith": "blocked"
+    },
+    "nextActions": [
+      {
+        "caseIds": [
+          "case_rag_candidate_grounded_citation"
+        ],
+        "caseSourceRunIds": {
+          "case_rag_candidate_grounded_citation": "run_rag_candidate_grounded_citation"
+        },
+        "command": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync-preflight.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json --preflight-only --output table",
+        "envFileCommand": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync-preflight.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json --preflight-only --output table --env-file reports/release/release-smoke-preflight.local.env",
+        "id": "rerun-preflight-langsmith",
+        "label": "Rerun the LangSmith eval sync preflight after setting credentials",
+        "missingEnvAnyOf": [
+          "LANGSMITH_API_KEY|REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+        ],
+        "preflightEnvTemplate": "reports/release/release-smoke-preflight.local.env",
+        "preflightFile": "reports/release/release-smoke-preflight.local.json",
+        "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+        "readinessReports": {
+          "hardening_suite": "reports/hardening-suite.json",
+          "langsmith_eval_sync": "reports/langsmith-eval-sync.json"
+        },
+        "recommendedEnv": [
+          "LANGSMITH_ENDPOINT"
+        ],
+        "releaseReadinessCommand": "uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+        "releaseReadinessFile": "reports/release-readiness.json",
+        "reportFile": "reports/langsmith-eval-sync-preflight.json",
+        "requiredEnvAnyOf": [
+          [
+            "LANGSMITH_API_KEY",
+            "REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+          ]
+        ],
+        "requiredReadinessReports": [
+          "hardening_suite",
+          "langsmith_eval_sync"
+        ],
+        "requiredReviewNote": "Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.",
+        "sourceRunIds": [
+          "run_rag_candidate_grounded_citation"
+        ]
+      },
+      {
+        "caseIds": [
+          "case_rag_candidate_grounded_citation"
+        ],
+        "caseSourceRunIds": {
+          "case_rag_candidate_grounded_citation": "run_rag_candidate_grounded_citation"
+        },
+        "command": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+        "dependsOnActionIds": [
+          "rerun-preflight-langsmith"
+        ],
+        "envFileCommand": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json --env-file reports/release/release-smoke-preflight.local.env",
+        "id": "sync-langsmith",
+        "label": "Run the LangSmith eval sync after preflight passes",
+        "preflightEnvTemplate": "reports/release/release-smoke-preflight.local.env",
+        "preflightFile": "reports/release/release-smoke-preflight.local.json",
+        "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+        "readinessReports": {
+          "hardening_suite": "reports/hardening-suite.json",
+          "langsmith_eval_sync": "reports/langsmith-eval-sync.json"
+        },
+        "recommendedEnv": [
+          "LANGSMITH_ENDPOINT"
+        ],
+        "releaseReadinessCommand": "uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+        "releaseReadinessFile": "reports/release-readiness.json",
+        "reportFile": "reports/langsmith-eval-sync.json",
+        "requiredEnvAnyOf": [
+          [
+            "LANGSMITH_API_KEY",
+            "REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+          ]
+        ],
+        "requiredReadinessReports": [
+          "hardening_suite",
+          "langsmith_eval_sync"
+        ],
+        "requiredReviewNote": "Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.",
+        "sourceRunIds": [
+          "run_rag_candidate_grounded_citation"
+        ]
+      }
+    ],
+    "owner": "reactor.evals",
+    "preflightEnvTemplate": "reports/release/release-smoke-preflight.local.env",
+    "preflightFile": "reports/release/release-smoke-preflight.local.json",
+    "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+    "readinessReports": {
+      "hardening_suite": "reports/hardening-suite.json",
+      "langsmith_eval_sync": "reports/langsmith-eval-sync.json"
+    },
+    "readyNextActionIds": [
+      "rerun-preflight-langsmith"
+    ],
+    "recommendedEnv": [
+      "LANGSMITH_ENDPOINT"
+    ],
+    "releaseReadinessCommand": "uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+    "releaseReadinessFile": "reports/release-readiness.json",
+    "requiredEnvAnyOf": [
+      [
+        "LANGSMITH_API_KEY",
+        "REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+      ]
+    ],
+    "requiredReadinessReports": [
+      "hardening_suite",
+      "langsmith_eval_sync"
+    ],
+    "sourceSuite": "evals/regression/rag-ingestion-candidate.json"
+  },
+  "exampleIds": [
+    "3c5246d2-424b-5b5f-a961-f323af7babb9"
+  ],
+  "examples": 1,
+  "failure": "missing_langsmith_credentials",
+  "liveSyncCommand": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+  "metadataCaseIds": [
+    "case_rag_candidate_grounded_citation"
+  ],
+  "missingEnvAnyOf": [
+    "LANGSMITH_API_KEY|REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+  ],
+  "nextActionStates": {
+    "rerun-preflight-langsmith": "ready",
+    "sync-langsmith": "blocked"
+  },
+  "nextActions": [
+    {
+      "caseIds": [
+        "case_rag_candidate_grounded_citation"
+      ],
+      "caseSourceRunIds": {
+        "case_rag_candidate_grounded_citation": "run_rag_candidate_grounded_citation"
+      },
+      "command": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync-preflight.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json --preflight-only --output table",
+      "envFileCommand": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync-preflight.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json --preflight-only --output table --env-file reports/release/release-smoke-preflight.local.env",
+      "id": "rerun-preflight-langsmith",
+      "label": "Rerun the LangSmith eval sync preflight after setting credentials",
+      "missingEnvAnyOf": [
+        "LANGSMITH_API_KEY|REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+      ],
+      "preflightEnvTemplate": "reports/release/release-smoke-preflight.local.env",
+      "preflightFile": "reports/release/release-smoke-preflight.local.json",
+      "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+      "readinessReports": {
+        "hardening_suite": "reports/hardening-suite.json",
+        "langsmith_eval_sync": "reports/langsmith-eval-sync.json"
+      },
+      "recommendedEnv": [
+        "LANGSMITH_ENDPOINT"
+      ],
+      "releaseReadinessCommand": "uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+      "releaseReadinessFile": "reports/release-readiness.json",
+      "reportFile": "reports/langsmith-eval-sync-preflight.json",
+      "requiredEnvAnyOf": [
+        [
+          "LANGSMITH_API_KEY",
+          "REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+        ]
+      ],
+      "requiredReadinessReports": [
+        "hardening_suite",
+        "langsmith_eval_sync"
+      ],
+      "requiredReviewNote": "Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.",
+      "sourceRunIds": [
+        "run_rag_candidate_grounded_citation"
+      ]
+    },
+    {
+      "caseIds": [
+        "case_rag_candidate_grounded_citation"
+      ],
+      "caseSourceRunIds": {
+        "case_rag_candidate_grounded_citation": "run_rag_candidate_grounded_citation"
+      },
+      "command": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+      "dependsOnActionIds": [
+        "rerun-preflight-langsmith"
+      ],
+      "envFileCommand": "uv run reactor-langsmith-eval-sync --suite-file evals/regression/rag-ingestion-candidate.json --dataset-name reactor-rag-ingestion-candidate --report-file reports/langsmith-eval-sync.json --feedback-review-status done --feedback-review-tag promoted --feedback-review-tag langsmith --feedback-review-tag collection:rag-ingestion-candidate --feedback-review-tag rag-candidate:grounded_citation --feedback-review-note 'Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.' --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json --env-file reports/release/release-smoke-preflight.local.env",
+      "id": "sync-langsmith",
+      "label": "Run the LangSmith eval sync after preflight passes",
+      "preflightEnvTemplate": "reports/release/release-smoke-preflight.local.env",
+      "preflightFile": "reports/release/release-smoke-preflight.local.json",
+      "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+      "readinessReports": {
+        "hardening_suite": "reports/hardening-suite.json",
+        "langsmith_eval_sync": "reports/langsmith-eval-sync.json"
+      },
+      "recommendedEnv": [
+        "LANGSMITH_ENDPOINT"
+      ],
+      "releaseReadinessCommand": "uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+      "releaseReadinessFile": "reports/release-readiness.json",
+      "reportFile": "reports/langsmith-eval-sync.json",
+      "requiredEnvAnyOf": [
+        [
+          "LANGSMITH_API_KEY",
+          "REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+        ]
+      ],
+      "requiredReadinessReports": [
+        "hardening_suite",
+        "langsmith_eval_sync"
+      ],
+      "requiredReviewNote": "Promoted to regression eval and reviewed in hardening/LangSmith. Required readiness reports: hardening_suite, langsmith_eval_sync.",
+      "sourceRunIds": [
+        "run_rag_candidate_grounded_citation"
+      ]
+    }
+  ],
+  "ok": false,
+  "preflightEnvTemplate": "reports/release/release-smoke-preflight.local.env",
+  "preflightFile": "reports/release/release-smoke-preflight.local.json",
+  "readinessReportArg": "--readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+  "readinessReports": {
+    "hardening_suite": "reports/hardening-suite.json",
+    "langsmith_eval_sync": "reports/langsmith-eval-sync.json"
+  },
+  "readyNextActionIds": [
+    "rerun-preflight-langsmith"
+  ],
+  "recommendedEnv": [
+    "LANGSMITH_ENDPOINT"
+  ],
+  "releaseGate": {
+    "blocksReleaseReadiness": true,
+    "reason": "missing_langsmith_credentials",
+    "remediation": [
+      "set_langsmith_api_key",
+      "rerun_reactor_langsmith_eval_sync_preflight",
+      "rerun_reactor_langsmith_eval_sync"
+    ],
+    "requiredReport": "langsmith_eval_sync",
+    "status": "blocked"
+  },
+  "releaseGateReason": "missing_langsmith_credentials",
+  "releaseReadinessCommand": "uv run reactor-replatform-readiness --output reports/release/replatform-readiness.local.json --allow-deferred-release-gates && uv run reactor-release-smoke-plan --readiness reports/release/replatform-readiness.local.json --output reports/release/release-smoke-plan.local.json && uv run reactor-release-smoke-run --plan reports/release/release-smoke-plan.local.json --preflight-file reports/release/release-smoke-preflight.local.json --env-file reports/release/release-smoke-preflight.local.env --report-file reports/release-smoke-run.json --evidence-output reports/release-evidence.json --verified-at $(date -u +%Y-%m-%dT%H:%M:%SZ) --latest-tag $(git describe --tags --abbrev=0) --readiness-output reports/release-readiness.json --required-readiness-report hardening_suite --required-readiness-report langsmith_eval_sync --readiness-report hardening_suite=reports/hardening-suite.json --readiness-report langsmith_eval_sync=reports/langsmith-eval-sync.json",
+  "releaseReadinessFile": "reports/release-readiness.json",
+  "reportFile": "reports/langsmith-eval-sync-preflight.json",
+  "requiredEnvAnyOf": [
+    [
+      "LANGSMITH_API_KEY",
+      "REACTOR_OBSERVABILITY_LANGSMITH_API_KEY"
+    ]
+  ],
+  "requiredReadinessReports": [
+    "hardening_suite",
+    "langsmith_eval_sync"
+  ],
+  "scope": "langsmith_eval_dataset_sync_preflight",
+  "sourceRunIds": [
+    "run_rag_candidate_grounded_citation"
+  ],
+  "sourceSuite": "evals/regression/rag-ingestion-candidate.json",
+  "splitCounts": {
+    "regression": 1
+  },
+  "status": "blocked"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "Reactor Admin",
+  "short_name": "Reactor Admin",
+  "description": "Reactor 운영 콘솔",
+  "icons": [
+    { "src": "/reactor-mark.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "theme_color": "#0C1017",
+  "background_color": "#0C1017",
+  "display": "standalone",
+  "lang": "ko"
+}

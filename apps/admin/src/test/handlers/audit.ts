@@ -1,0 +1,395 @@
+import { http, HttpResponse } from 'msw'
+import { NOW, HOUR, DAY } from './shared'
+
+export const mockAuditLogs = [
+  // --- Last hour ---
+  {
+    id: 'audit-01',
+    category: 'mcp_server',
+    action: 'CREATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'atlassian',
+    detail: JSON.stringify({ name: 'atlassian', transportType: 'SSE', autoConnect: true }),
+    createdAt: NOW - 25 * 60_000,
+  },
+  {
+    id: 'audit-02',
+    category: 'mcp_server',
+    action: 'CREATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'slack-bot',
+    detail: JSON.stringify({ name: 'slack-bot', transportType: 'STDIO', autoConnect: false }),
+    createdAt: NOW - 24 * 60_000,
+  },
+  {
+    id: 'audit-03',
+    category: 'tool_policy',
+    action: 'UPDATE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolPolicy',
+    resourceId: 'global',
+    detail: JSON.stringify({ before: { denyWriteChannels: [] }, after: { denyWriteChannels: ['commentary', 'direct_message'] } }),
+    createdAt: NOW - 45 * 60_000,
+  },
+  {
+    id: 'audit-04',
+    category: 'mcp_security',
+    action: 'UPDATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpSecurityPolicy',
+    resourceId: 'atlassian',
+    detail: JSON.stringify({ before: { allowAll: true }, after: { allowAll: false, allowedTools: ['jira_search', 'confluence_get_page'] } }),
+    createdAt: NOW - HOUR,
+  },
+  {
+    id: 'audit-05',
+    category: 'approval',
+    action: 'APPROVE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolApproval',
+    resourceId: 'approval-7',
+    detail: JSON.stringify({ tool: 'jira_create_issue', runId: 'run-12', reason: 'Verified safe for production' }),
+    createdAt: NOW - HOUR - 15 * 60_000,
+  },
+  // --- 2-6 hours ago ---
+  {
+    id: 'audit-06',
+    category: 'mcp_server',
+    action: 'UPDATE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'swagger',
+    detail: JSON.stringify({ before: { autoConnect: false }, after: { autoConnect: true } }),
+    createdAt: NOW - 2 * HOUR,
+  },
+  {
+    id: 'audit-07',
+    category: 'mcp_security',
+    action: 'UPDATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpSecurityPolicy',
+    resourceId: 'slack-bot',
+    detail: JSON.stringify({ before: { allowAll: true }, after: { allowAll: false, blockedTools: ['slack_delete_message'] } }),
+    createdAt: NOW - 3 * HOUR,
+  },
+  {
+    id: 'audit-08',
+    category: 'tool_policy',
+    action: 'UPDATE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolPolicy',
+    resourceId: 'workspace-eng',
+    detail: JSON.stringify({ changes: { allowedTools: ['code_review', 'test_runner', 'deploy_staging'], maxCallsPerMinute: 30 } }),
+    createdAt: NOW - 5 * HOUR,
+  },
+  {
+    id: 'audit-09',
+    category: 'approval',
+    action: 'REJECT',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolApproval',
+    resourceId: 'approval-6',
+    detail: JSON.stringify({ tool: 'confluence_delete_page', runId: 'run-11', reason: 'Destructive action requires manager approval' }),
+    createdAt: NOW - 6 * HOUR,
+  },
+  // --- 8-12 hours ago ---
+  {
+    id: 'audit-10',
+    category: 'mcp_server',
+    action: 'DELETE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'deprecated-weather',
+    detail: JSON.stringify({ name: 'deprecated-weather', reason: 'Service decommissioned' }),
+    createdAt: NOW - 8 * HOUR,
+  },
+  {
+    id: 'audit-11',
+    category: 'session',
+    action: 'DELETE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'Session',
+    resourceId: 'session-expired-batch',
+    detail: JSON.stringify({ deletedCount: 14, reason: 'Bulk cleanup of expired sessions' }),
+    createdAt: NOW - 10 * HOUR,
+  },
+  {
+    id: 'audit-12',
+    category: 'mcp_security',
+    action: 'DELETE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpSecurityPolicy',
+    resourceId: 'deprecated-weather',
+    detail: JSON.stringify({ reason: 'Server removed, cleaning up security policy' }),
+    createdAt: NOW - 12 * HOUR,
+  },
+  // --- 1 day ago ---
+  {
+    id: 'audit-13',
+    category: 'mcp_server',
+    action: 'CREATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'github-dev',
+    detail: JSON.stringify({ name: 'github-dev', transportType: 'SSE', autoConnect: true }),
+    createdAt: NOW - DAY,
+  },
+  {
+    id: 'audit-14',
+    category: 'tool_policy',
+    action: 'UPDATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolPolicy',
+    resourceId: 'global',
+    detail: JSON.stringify({ before: { maxCallsPerMinute: 60 }, after: { maxCallsPerMinute: 30 } }),
+    createdAt: NOW - DAY - 2 * HOUR,
+  },
+  {
+    id: 'audit-15',
+    category: 'approval',
+    action: 'APPROVE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolApproval',
+    resourceId: 'approval-5',
+    detail: JSON.stringify({ tool: 'jira_search', runId: 'run-9', reason: 'Read-only access approved' }),
+    createdAt: NOW - DAY - 5 * HOUR,
+  },
+  {
+    id: 'audit-16',
+    category: 'mcp_server',
+    action: 'UPDATE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'atlassian',
+    detail: JSON.stringify({ before: { description: '' }, after: { description: 'Atlassian Jira & Confluence integration' } }),
+    createdAt: NOW - DAY - 8 * HOUR,
+  },
+  // --- 2 days ago ---
+  {
+    id: 'audit-17',
+    category: 'mcp_security',
+    action: 'UPDATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpSecurityPolicy',
+    resourceId: 'github-dev',
+    detail: JSON.stringify({ before: { allowAll: true }, after: { allowAll: false, allowedTools: ['repo_search', 'pr_list'] } }),
+    createdAt: NOW - 2 * DAY,
+  },
+  {
+    id: 'audit-18',
+    category: 'tool_policy',
+    action: 'DELETE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolPolicy',
+    resourceId: 'workspace-staging',
+    detail: JSON.stringify({ reason: 'Staging workspace retired' }),
+    createdAt: NOW - 2 * DAY - 3 * HOUR,
+  },
+  {
+    id: 'audit-19',
+    category: 'approval',
+    action: 'APPROVE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolApproval',
+    resourceId: 'approval-3',
+    detail: JSON.stringify({ tool: 'confluence_update_page', runId: 'run-3', reason: 'Content update verified' }),
+    createdAt: NOW - 2 * DAY - 6 * HOUR,
+  },
+  // --- 3 days ago ---
+  {
+    id: 'audit-20',
+    category: 'mcp_server',
+    action: 'CREATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'internal-docs',
+    detail: JSON.stringify({ name: 'internal-docs', transportType: 'SSE', autoConnect: true }),
+    createdAt: NOW - 3 * DAY,
+  },
+  {
+    id: 'audit-21',
+    category: 'session',
+    action: 'DELETE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'Session',
+    resourceId: 'session-revoked-user-42',
+    detail: JSON.stringify({ reason: 'Admin revoked for policy violation' }),
+    createdAt: NOW - 3 * DAY - 4 * HOUR,
+  },
+  {
+    id: 'audit-22',
+    category: 'mcp_security',
+    action: 'UPDATE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpSecurityPolicy',
+    resourceId: 'internal-docs',
+    detail: JSON.stringify({ before: { allowAll: true }, after: { allowAll: false, allowedTools: ['doc_search', 'doc_get'] } }),
+    createdAt: NOW - 3 * DAY - 8 * HOUR,
+  },
+  // --- 4 days ago ---
+  {
+    id: 'audit-23',
+    category: 'tool_policy',
+    action: 'UPDATE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolPolicy',
+    resourceId: 'global',
+    detail: JSON.stringify({ before: { denyWriteChannels: ['direct_message'] }, after: { denyWriteChannels: [] } }),
+    createdAt: NOW - 4 * DAY,
+  },
+  {
+    id: 'audit-24',
+    category: 'approval',
+    action: 'REJECT',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolApproval',
+    resourceId: 'approval-2',
+    detail: JSON.stringify({ tool: 'slack_delete_message', runId: 'run-2', reason: 'Destructive operation not approved' }),
+    createdAt: NOW - 4 * DAY - 4 * HOUR,
+  },
+  // --- 5 days ago ---
+  {
+    id: 'audit-25',
+    category: 'mcp_server',
+    action: 'UPDATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'swagger',
+    detail: JSON.stringify({ before: { transportType: 'STDIO' }, after: { transportType: 'SSE' } }),
+    createdAt: NOW - 5 * DAY,
+  },
+  {
+    id: 'audit-26',
+    category: 'mcp_security',
+    action: 'DELETE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpSecurityPolicy',
+    resourceId: 'legacy-api',
+    detail: JSON.stringify({ reason: 'Server deregistered' }),
+    createdAt: NOW - 5 * DAY - 2 * HOUR,
+  },
+  // --- 6 days ago ---
+  {
+    id: 'audit-27',
+    category: 'mcp_server',
+    action: 'CREATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'McpServer',
+    resourceId: 'legacy-api',
+    detail: JSON.stringify({ name: 'legacy-api', transportType: 'STDIO', autoConnect: false }),
+    createdAt: NOW - 6 * DAY,
+  },
+  {
+    id: 'audit-28',
+    category: 'approval',
+    action: 'APPROVE',
+    actor: 'ops@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolApproval',
+    resourceId: 'approval-1',
+    detail: JSON.stringify({ tool: 'slack_send_message', runId: 'run-1', reason: 'Verified internal-only channel' }),
+    createdAt: NOW - 6 * DAY - 5 * HOUR,
+  },
+  // --- 7 days ago ---
+  {
+    id: 'audit-29',
+    category: 'session',
+    action: 'DELETE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'Session',
+    resourceId: 'session-bulk-weekly',
+    detail: JSON.stringify({ deletedCount: 23, reason: 'Weekly expired session cleanup' }),
+    createdAt: NOW - 7 * DAY,
+  },
+  {
+    id: 'audit-30',
+    category: 'tool_policy',
+    action: 'UPDATE',
+    actor: 'admin@example.com',
+    actorEmail: 'admin@example.com',
+    resourceType: 'ToolPolicy',
+    resourceId: 'workspace-eng',
+    detail: JSON.stringify({ before: { maxCallsPerMinute: 120 }, after: { maxCallsPerMinute: 60 } }),
+    createdAt: NOW - 7 * DAY - 3 * HOUR,
+  },
+]
+
+function getMockAuditLogs() {
+  // Only override entries with translatable reason/description text
+  return mockAuditLogs.map(log => {
+    const detailOverrides: Record<string, string> = {
+      'audit-05': JSON.stringify({ tool: 'jira_create_issue', runId: 'run-12', reason: '프로덕션 안전 확인됨' }),
+      'audit-09': JSON.stringify({ tool: 'confluence_delete_page', runId: 'run-11', reason: '파괴적 작업은 매니저 승인이 필요합니다' }),
+      'audit-10': JSON.stringify({ name: 'deprecated-weather', reason: '서비스 폐지됨' }),
+      'audit-11': JSON.stringify({ deletedCount: 14, reason: '만료된 세션 일괄 정리' }),
+      'audit-12': JSON.stringify({ reason: '서버 제거됨, 보안 정책 정리' }),
+      'audit-15': JSON.stringify({ tool: 'jira_search', runId: 'run-9', reason: '읽기 전용 접근 승인됨' }),
+      'audit-16': JSON.stringify({ before: { description: '' }, after: { description: 'Atlassian Jira & Confluence 연동 서버' } }),
+      'audit-18': JSON.stringify({ reason: '스테이징 워크스페이스 폐지됨' }),
+      'audit-19': JSON.stringify({ tool: 'confluence_update_page', runId: 'run-3', reason: '콘텐츠 업데이트 확인됨' }),
+      'audit-21': JSON.stringify({ reason: '정책 위반으로 관리자 권한 철회됨' }),
+      'audit-24': JSON.stringify({ tool: 'slack_delete_message', runId: 'run-2', reason: '파괴적 작업 승인되지 않음' }),
+      'audit-26': JSON.stringify({ reason: '서버 등록 해제됨' }),
+      'audit-28': JSON.stringify({ tool: 'slack_send_message', runId: 'run-1', reason: '내부 전용 채널 확인됨' }),
+      'audit-29': JSON.stringify({ deletedCount: 23, reason: '주간 만료 세션 정리' }),
+    }
+    if (detailOverrides[log.id]) {
+      return { ...log, detail: detailOverrides[log.id] }
+    }
+    return log
+  })
+}
+
+export const auditHandlers = [
+  http.get('/api/admin/audits', ({ request }) => {
+    const url = new URL(request.url)
+    const category = url.searchParams.get('category')
+    const action = url.searchParams.get('action')
+    const offset = Number(url.searchParams.get('offset') ?? '0')
+    const limit = Math.min(Number(url.searchParams.get('limit') ?? '50'), 200)
+
+    let filtered = getMockAuditLogs()
+    if (category) filtered = filtered.filter(l => l.category === category)
+    if (action) filtered = filtered.filter(l => l.action === action)
+
+    const items = filtered.slice(offset, offset + limit)
+    return HttpResponse.json({ items, total: filtered.length, offset, limit })
+  }),
+
+  http.get('/api/admin/audits/export', () => {
+    const csv = 'id,category,action,actor,createdAt\naudit-01,mcp_server,CREATE,admin@example.com,2026-04-06'
+    return new HttpResponse(csv, {
+      headers: { 'Content-Type': 'text/csv' },
+    })
+  }),
+]

@@ -1,0 +1,146 @@
+/* Page-level help overlay — mirrors CommandPalette overlay surface so the
+   two share a consistent "Quiet Authority" presentation. */
+
+.page-help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: var(--z-modal);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 80px var(--space-4) var(--space-4);
+  overflow-y: auto;
+}
+
+.page-help {
+  position: relative;
+  width: 560px;
+  max-width: 100%;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6);
+  animation: page-help-enter 0.15s ease-out;
+}
+
+@keyframes page-help-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.page-help__title {
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-emphasis);
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0 44px var(--space-4) 0;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-standard);
+}
+
+.page-help__section {
+  margin-bottom: var(--space-5);
+}
+
+.page-help__section:last-child {
+  margin-bottom: 0;
+}
+
+.page-help__section-title {
+  color: var(--text-dim);
+  font-size: var(--text-xxs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-emphasis);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.page-help__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.page-help__list-item {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.page-help__shortcut-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.page-help__shortcut {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-standard);
+}
+
+.page-help__shortcut:last-child {
+  border-bottom: none;
+}
+
+.page-help__shortcut-keys {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+.page-help__kbd {
+  background: var(--bg-surface);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  border: 1px solid var(--border-standard);
+  color: var(--text-muted);
+  font-weight: var(--font-weight-emphasis);
+  min-width: 20px;
+  text-align: center;
+}
+
+.page-help__shortcut-desc {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  text-align: right;
+}
+
+.page-help__empty {
+  color: var(--text-dim);
+  font-size: var(--text-sm);
+  font-style: italic;
+}
+
+/* Reduced motion: skip the scale+translate enter animation so the
+ * overlay appears in place rather than zooming in. */
+@media (prefers-reduced-motion: reduce) {
+  .page-help-overlay {
+    animation: none !important;
+    transform: none !important;
+  }
+}

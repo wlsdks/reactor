@@ -1,0 +1,13 @@
+title = "Reactor Gitleaks Configuration"
+
+[allowlist]
+description = """
+Suppress false positives from documentation files and README.
+Markdown files contain curl examples, placeholder credentials, and sample
+JWT/API-key values that are clearly not real secrets. These are documentation
+examples, not committed credentials.
+"""
+paths = [
+  '''(?i)docs/.*\.md$''',
+  '''(?i)README.*\.md$''',
+]

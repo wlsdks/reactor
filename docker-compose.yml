@@ -1,0 +1,69 @@
+services:
+  app:
+    build:
+      context: .
+    environment:
+      REACTOR_HOST: 0.0.0.0
+      REACTOR_PORT: 8000
+      REACTOR_DATABASE_URL: postgresql://reactor:reactor@db:5432/reactor
+      REACTOR_REDIS_URL: redis://redis:6379/0
+    ports:
+      - "${REACTOR_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/app/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  admin:
+    build:
+      context: ./apps/admin
+      args:
+        VITE_API_URL: ""
+        VITE_IAM_URL: ${VITE_IAM_URL:-}
+    ports:
+      - "${REACTOR_ADMIN_PORT:-3001}:80"
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: pgvector/pgvector:0.8.3-pg18-trixie
+    environment:
+      POSTGRES_DB: reactor
+      POSTGRES_USER: reactor
+      POSTGRES_PASSWORD: reactor
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U reactor -d reactor"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.8.0-alpine
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

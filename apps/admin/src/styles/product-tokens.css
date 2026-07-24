@@ -1,0 +1,109 @@
+/*
+ * Reactor Admin product tokens
+ *
+ * Primitive palette and 4px spacing values remain in index.css. This layer
+ * names the product roles used by the right-hand operations workspace so
+ * shared components do not encode page-specific dimensions.
+ */
+:root {
+  /* Content frame */
+  --workspace-max-width: 1480px;
+  --workspace-gutter: var(--space-8);
+  --workspace-section-gap: var(--space-8);
+  --workspace-stack-gap: var(--space-6);
+  --workspace-inline-gap: var(--space-3);
+  --workspace-readable-width: 1120px;
+  --collection-compact-width: 720px;
+  --workspace-mobile-edge: var(--space-4);
+
+  /* Product identity and navigation selection */
+  --brand-mark-foreground: #E7BD6F;
+  --navigation-item-active-surface: rgba(231, 189, 111, 0.12);
+  --navigation-item-active-foreground: var(--text-primary);
+  --navigation-item-active-icon: var(--brand-mark-foreground);
+
+  /* Surfaces */
+  --surface-workspace: var(--bg-root);
+  --surface-panel: var(--bg-surface-1);
+  --surface-panel-raised: var(--bg-surface-2);
+  --surface-panel-muted: rgba(255, 255, 255, 0.015);
+  --surface-panel-border: var(--border-standard);
+  --surface-panel-radius: var(--radius-md);
+  --surface-panel-padding: var(--space-6);
+  --surface-panel-padding-compact: var(--space-4);
+  --surface-panel-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);
+  --summary-card-min-height: 132px;
+  --summary-card-gap: var(--space-3);
+  --surface-note: rgba(221, 228, 238, 0.035);
+  --surface-note-hover: rgba(221, 228, 238, 0.055);
+  --surface-note-border: var(--border-standard);
+  --surface-feedback: rgba(221, 228, 238, 0.028);
+  --surface-feedback-border: var(--border-standard);
+
+  /* Typography roles */
+  --type-page-title-size: var(--text-xl);
+  --type-page-title-line-height: 1.2;
+  --type-section-title-size: var(--text-lg);
+  --type-panel-title-size: var(--text-md);
+  --type-body-size: var(--text-sm);
+  --type-body-line-height: 1.6;
+  --type-meta-size: var(--text-xs);
+  --type-label-size: var(--text-xs);
+  --type-label-tracking: 0.02em;
+
+  /* Controls */
+  --control-height-compact: 36px;
+  --control-height-default: 42px;
+  --control-height-prominent: 46px;
+  --control-inline-padding: var(--space-4);
+  --control-radius: var(--radius-sm);
+  --control-surface: var(--bg-surface-1);
+  --control-surface-hover: var(--bg-surface-2);
+  --control-border: var(--border-standard);
+  --icon-size-sm: 14px;
+  --icon-size-default: 16px;
+  --toolbar-min-height: var(--control-height-prominent);
+
+  /* Data presentation */
+  --data-header-height: 42px;
+  --data-row-height: 48px;
+  --data-row-height-comfortable: 92px;
+  --data-cell-padding-block: var(--space-3);
+  --data-cell-padding-inline: var(--space-4);
+  --data-row-divider: var(--border-subtle);
+  --data-row-hover: var(--bg-surface-2);
+  --conversation-list-compact-height: 288px;
+  --conversation-list-max-height: 600px;
+  --conversation-list-viewport-offset: 300px;
+
+  /* Overlays */
+  --overlay-panel-width: 440px;
+  --overlay-panel-width-wide: 560px;
+  --dialog-width: 560px;
+  --dialog-width-large: 800px;
+  --overlay-padding: var(--space-6);
+  --overlay-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 1024px) {
+  :root {
+    --workspace-gutter: var(--space-6);
+    --workspace-section-gap: var(--space-6);
+    --surface-panel-padding: var(--space-5);
+    --data-row-height: 52px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --workspace-gutter: var(--space-4);
+    --workspace-section-gap: var(--space-5);
+    --workspace-stack-gap: var(--space-4);
+    --surface-panel-padding: var(--space-4);
+    --data-cell-padding-inline: var(--space-3);
+    --overlay-padding: var(--space-4);
+    --control-height-default: 44px;
+    --control-height-compact: 40px;
+    --data-row-height: 56px;
+  }
+}

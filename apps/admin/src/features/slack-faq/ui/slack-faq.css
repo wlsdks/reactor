@@ -1,0 +1,398 @@
+.slack-faq-tab {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.slack-faq-tab__header,
+.slack-faq-tab__summary,
+.faq-channel-list__heading,
+.faq-detail-pane__header,
+.faq-overview__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.slack-faq-tab__header h2,
+.faq-detail-pane__header h3,
+.faq-overview__header h3 {
+  margin: 0;
+}
+
+.slack-faq-tab__header p,
+.faq-detail-pane__header p,
+.faq-overview__header p {
+  margin: var(--space-1) 0 0;
+  color: var(--text-secondary);
+}
+
+.slack-faq-tab__summary {
+  justify-content: flex-start;
+  border-block: 1px solid var(--border-subtle);
+  padding: var(--space-3) 0;
+}
+
+.slack-faq-tab__summary > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  color: var(--text-tertiary);
+  font-size: var(--text-sm);
+}
+
+.slack-faq-tab__summary > span + span {
+  border-left: 1px solid var(--border-subtle);
+  padding-left: var(--space-4);
+}
+
+.slack-faq-tab__summary strong {
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
+}
+
+.slack-faq-tab__layout {
+  display: grid;
+  grid-template-columns: minmax(15rem, 18rem) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.faq-channel-list {
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.faq-channel-list__heading {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq-channel-list__heading h3 {
+  margin: 0;
+  font-size: var(--text-md);
+}
+
+.faq-channel-list__heading span {
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.faq-channel-list__items {
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+}
+
+.faq-channel-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  width: 100%;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-channel-row:hover,
+.faq-channel-row.is-selected {
+  background: var(--surface-hover);
+}
+
+.faq-channel-row.is-selected {
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.faq-channel-row__dot,
+.faq-plain-status > span {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.4rem;
+  border-radius: 50%;
+  background: var(--text-disabled);
+}
+
+.faq-channel-row__dot.enabled,
+.faq-plain-status.is-active > span {
+  background: var(--status-success-fg);
+}
+
+.faq-channel-row__name {
+  min-width: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.faq-channel-row__name small {
+  display: block;
+  overflow: hidden;
+  margin-top: 0.15rem;
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.faq-channel-row__kpis {
+  grid-column: 2;
+  display: flex;
+  gap: var(--space-2);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+}
+
+.faq-channel-row__kpis span + span::before {
+  content: "·";
+  margin-right: var(--space-2);
+}
+
+.faq-channel-list__loading,
+.faq-channel-list__unavailable {
+  padding: var(--space-4);
+}
+
+.faq-channel-list__unavailable p {
+  color: var(--text-secondary);
+}
+
+.slack-faq-tab__main,
+.faq-detail-pane,
+.faq-detail-pane__content {
+  min-width: 0;
+}
+
+.slack-faq-tab__org-overview,
+.faq-detail-pane {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+}
+
+.slack-faq-tab__org-overview {
+  padding: var(--space-6);
+}
+
+.slack-faq-tab__org-overview h3 {
+  margin: var(--space-2) 0;
+}
+
+.slack-faq-tab__org-eyebrow {
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.04em;
+}
+
+.slack-faq-tab__org-hint {
+  color: var(--text-secondary);
+}
+
+.faq-detail-pane__header {
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq-detail-pane__header > div {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.faq-detail-pane__nav {
+  display: flex;
+  gap: var(--space-5);
+  overflow-x: auto;
+  padding: 0 var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq-detail-pane__nav button {
+  flex: 0 0 auto;
+  padding: var(--space-3) 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.faq-detail-pane__nav button:hover,
+.faq-detail-pane__nav button.is-active {
+  color: var(--text-primary);
+}
+
+.faq-detail-pane__nav button.is-active {
+  border-bottom-color: var(--accent-primary);
+}
+
+.faq-detail-pane__content {
+  padding: var(--space-5);
+}
+
+.faq-overview__header {
+  align-items: flex-start;
+  margin-bottom: var(--space-4);
+}
+
+.faq-overview__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.faq-overview__list > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.8fr) minmax(0, 1.2fr);
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.faq-overview__list > div:nth-child(odd) {
+  padding-right: var(--space-5);
+}
+
+.faq-overview__list dt {
+  color: var(--text-tertiary);
+}
+
+.faq-overview__list dd {
+  margin: 0;
+}
+
+.faq-plain-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.faq-plain-status > span {
+  margin: 0;
+}
+
+.faq-detail-pane__test-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.faq-detail-pane__test-grid > section + section {
+  padding-left: var(--space-5);
+  border-left: 1px solid var(--border-subtle);
+}
+
+.faq-detail-pane__activity,
+.faq-detail-pane__manage {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.faq-detail-pane__activity > div + div {
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.faq-detail-pane__manage details {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-4);
+}
+
+.faq-detail-pane__manage summary {
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.faq-outcome {
+  color: var(--text-secondary);
+}
+
+.faq-outcome--match { color: var(--status-success-fg); }
+.faq-outcome--error { color: var(--status-danger-fg); }
+
+.slack-faq-tab .side-drawer form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+@media (max-width: 960px) {
+  .slack-faq-tab__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-channel-list__items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .faq-detail-pane__test-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-detail-pane__test-grid > section + section {
+    padding-top: var(--space-5);
+    padding-left: 0;
+    border-top: 1px solid var(--border-subtle);
+    border-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .slack-faq-tab {
+    gap: var(--space-4);
+  }
+
+  .slack-faq-tab__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .slack-faq-tab__header .btn {
+    width: 100%;
+  }
+
+  .slack-faq-tab__summary {
+    overflow-x: auto;
+  }
+
+  .slack-faq-tab__summary > span {
+    flex: 0 0 auto;
+  }
+
+  .faq-channel-list__items,
+  .faq-overview__list {
+    grid-template-columns: 1fr;
+  }
+
+  .faq-detail-pane__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .faq-detail-pane__header .btn {
+    width: 100%;
+  }
+
+  .faq-detail-pane__nav {
+    padding-inline: var(--space-4);
+  }
+
+  .faq-detail-pane__content {
+    padding: var(--space-4);
+  }
+
+  .faq-overview__list > div,
+  .faq-overview__list > div:nth-child(odd) {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+    padding-right: 0;
+  }
+}

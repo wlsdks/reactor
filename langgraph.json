@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "reactor_basic": "./src/reactor/agents/graph.py:build_reactor_graph"
+  },
+  "env": ".env"
+}

@@ -1,0 +1,58 @@
+{
+  "qualityGates": {
+    "minPassRate": 1.0,
+    "maxFailed": 0,
+    "maxSkipped": 0,
+    "maxRateLimited": 0,
+    "maxAverageDurationMs": 2000,
+    "maxP95DurationMs": 3000,
+    "maxToolsUsedPerCase": 2
+  },
+  "defaults": {
+    "method": "POST",
+    "path": "/api/chat",
+    "auth": "user",
+    "timeoutSec": 30,
+    "maxAttempts": 2,
+    "json": {
+      "message": "health check {{run_id}}",
+      "metadata": {
+        "sessionId": "{{run_id}}-default",
+        "channel": "web"
+      }
+    },
+    "expect": {
+      "status": 200,
+      "success": true,
+      "toolsUsedMaxCount": 2
+    }
+  },
+  "scenarios": [
+    {
+      "id": "matrix-tool-routing",
+      "tags": ["contract", "matrix"],
+      "matrix": {
+        "tool_name": ["issue_search", "knowledge_search"],
+        "channel": ["web", "chat"]
+      },
+      "json": {
+        "message": "Use {{tool_name}} through {channel} for {{run_id}}",
+        "metadata": {
+          "sessionId": "{{run_id}}-{{tool_name}}-{channel}",
+          "channel": "{channel}"
+        }
+      },
+      "expect": {
+        "toolsUsedAll": ["{{tool_name}}"],
+        "contentNotRegex": ["(?i)secret|token"]
+      }
+    },
+    {
+      "id": "disabled-case",
+      "enabled": false,
+      "json": {
+        "message": "disabled"
+      }
+    }
+  ]
+}

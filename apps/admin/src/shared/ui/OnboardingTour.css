@@ -1,0 +1,152 @@
+/* Onboarding tour — full-screen translucent backdrop with a cutout window
+   over the spotlighted target plus a popover beside it. Mirrors the
+   "Quiet Authority" surface treatment used by PageHelpOverlay /
+   CommandPalette so the three feel like one family. */
+
+.onboarding-tour {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  pointer-events: auto;
+}
+
+/* The four backdrop panels surround the cutout window (top, right, bottom,
+ * left). Splitting the dim layer this way avoids needing SVG masks while
+ * still allowing pointer events to fall through the cutout to the underlying
+ * UI (so spotlighted controls can be clicked through if the user wants). */
+.onboarding-tour__shade {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.onboarding-tour__cutout {
+  position: absolute;
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 0 0 2px var(--accent),
+    0 0 0 8px var(--accent-shadow);
+  pointer-events: none;
+  transition: top var(--duration-base) var(--ease-standard), left var(--duration-base) var(--ease-standard), width var(--duration-base) var(--ease-standard), height var(--duration-base) var(--ease-standard);
+}
+
+.onboarding-tour__popover {
+  position: absolute;
+  width: 360px;
+  max-width: calc(100vw - var(--space-6));
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-standard);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-5);
+  animation: onboarding-tour-enter 0.18s ease-out;
+}
+
+@keyframes onboarding-tour-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.onboarding-tour__counter {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.onboarding-tour__title {
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-primary);
+  margin: 0 var(--space-8) var(--space-2) 0;
+  letter-spacing: -0.01em;
+}
+
+.onboarding-tour__description {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0 0 var(--space-4) 0;
+}
+
+.onboarding-tour__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.onboarding-tour__actions-right {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.onboarding-tour__btn {
+  appearance: none;
+  background: transparent;
+  border: 1px solid var(--border-standard);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  font-family: inherit;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), border-color var(--duration-fast) var(--ease-standard);
+}
+
+.onboarding-tour__btn:hover {
+  background: var(--button-ghost-bg-hover);
+  color: var(--text-primary);
+}
+
+.onboarding-tour__btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.onboarding-tour__btn--primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg-root);
+}
+
+.onboarding-tour__btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--bg-root);
+}
+
+.onboarding-tour__btn--ghost {
+  border-color: transparent;
+  color: var(--text-dim);
+}
+
+.onboarding-tour__btn--ghost:hover {
+  background: var(--button-ghost-bg-hover);
+  color: var(--text-secondary);
+}
+
+.onboarding-tour__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-tour__popover {
+    animation: none !important;
+  }
+  .onboarding-tour__cutout {
+    transition: none !important;
+  }
+}

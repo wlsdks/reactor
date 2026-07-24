@@ -1,0 +1,247 @@
+.release-operations-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.release-operations-page > .release-workflow,
+.release-operations-page > .release-cockpit {
+  margin-top: 0;
+}
+
+.release-operations-page__loading {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.release-operations-unavailable {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 42rem;
+  padding: var(--space-6) 0;
+  border-block: 1px solid var(--border-standard);
+}
+
+.release-operations-unavailable h2,
+.release-operations-unavailable p {
+  margin: 0;
+}
+
+.release-operations-unavailable h2 {
+  font-size: var(--text-lg);
+}
+
+.release-operations-unavailable p {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.release-operations-unavailable__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.release-operations-unavailable__technical > summary {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.release-operations-unavailable__technical > summary:focus-visible {
+  outline: none;
+  box-shadow: inset 0 -2px var(--accent);
+}
+
+.release-operations-unavailable__technical code {
+  display: block;
+  max-width: 100%;
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.release-operations-page > .tabs-container {
+  min-width: 0;
+}
+
+.release-operations-view-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.release-operations-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.release-operations-view__description {
+  max-width: 72ch;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--text-muted);
+  background: transparent;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.release-operations-view > .release-workflow,
+.release-operations-view > .release-cockpit {
+  margin-top: 0;
+}
+
+.release-operations-view > .release-cockpit--boundary,
+.release-operations-view > .release-cockpit--evidence {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.release-cockpit--decision > [data-release-section]:not([data-release-section='decision']),
+.release-cockpit--boundary > [data-release-section]:not([data-release-section='boundary']),
+.release-cockpit--evidence > [data-release-section]:not([data-release-section='evidence']) {
+  display: none;
+}
+
+.release-cockpit--evidence > details[data-release-section='evidence'] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  border-radius: 0;
+  background: transparent;
+}
+
+.release-cockpit--evidence > details[data-release-section='evidence']:last-of-type {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.release-cockpit--evidence > details[data-release-section='evidence'] > summary {
+  min-height: 4rem;
+  margin: 0;
+  padding: var(--space-4) 0;
+  cursor: pointer;
+}
+
+.release-cockpit--evidence > details[data-release-section='evidence'][open] > summary {
+  margin-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.release-cockpit--evidence > details[data-release-section='evidence']:not([open]) > :not(summary) {
+  display: none;
+}
+
+.release-operations-summary {
+  margin: 0 0 var(--space-5);
+  padding: var(--space-4) 0;
+  border-block: 1px solid var(--border-standard);
+}
+
+.release-operations-summary__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.release-operations-summary__header h2 {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: 1.35;
+}
+
+.release-operations-summary__header p {
+  margin: 2px 0 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
+.release-operations-summary__decision {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: none;
+}
+
+.release-operations-summary__status,
+.release-operations-summary__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+}
+
+.release-operations-summary__status { color: var(--text-secondary); }
+.release-operations-summary__status > span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+.release-operations-summary__status.is-passed > span { background: var(--green); }
+.release-operations-summary__status.is-eligible_with_warnings > span { background: var(--yellow); }
+.release-operations-summary__status.is-blocked > span { background: var(--red); }
+
+.release-operations-summary__link {
+  color: var(--accent);
+  text-decoration: none;
+}
+.release-operations-summary__link:hover,
+.release-operations-summary__link:focus-visible { text-decoration: underline; }
+
+.release-operations-summary__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(72px, 1fr));
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.release-operations-summary__metrics > div {
+  min-width: 0;
+  min-height: 58px;
+  padding: var(--space-3) var(--space-4);
+  border-right: 1px solid var(--border-subtle);
+}
+.release-operations-summary__metrics > div:first-child { padding-left: 0; }
+.release-operations-summary__metrics > div:last-child { border-right: 0; }
+
+.release-operations-summary__metrics dt {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.release-operations-summary__metrics dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-strong);
+}
+
+@media (max-width: 1100px) {
+  .release-operations-summary__header { align-items: flex-start; }
+}
+
+@media (max-width: 640px) {
+  .release-operations-summary__header,
+  .release-operations-summary__decision { align-items: flex-start; flex-direction: column; }
+  .release-operations-summary__decision { gap: var(--space-2); }
+
+  .release-operations-summary__metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .release-operations-summary__metrics > div:nth-child(2) { border-right: 0; }
+  .release-operations-summary__metrics > div:nth-child(n + 3) { border-top: 1px solid var(--border-subtle); }
+}

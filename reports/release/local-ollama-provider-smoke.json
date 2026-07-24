@@ -1,0 +1,1 @@
+{"checks":{"chat_model_invoke":{"content_length":4,"status":"passed"},"required_env":{"status":"passed","variables":[]}},"model":"gemma4:12b","ok":true,"provider":"ollama","scope":"live","status":"passed"}

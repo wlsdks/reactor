@@ -1,0 +1,2559 @@
+{
+  "defaults": {
+    "method": "POST",
+    "path": "/api/chat",
+    "auth": "user",
+    "timeoutSec": 60,
+    "maxAttempts": 2,
+    "json": {
+      "message": "health check {{run_id}}",
+      "metadata": {
+        "sessionId": "{{run_id}}-golden-default",
+        "channel": "web",
+        "source": "golden-scenario-matrix",
+        "activity": "baseline"
+      }
+    },
+    "expect": {
+      "status": 200
+    }
+  },
+  "scenarios": [
+    {
+      "id": "golden-auth-user-chat",
+      "tags": [
+        "golden",
+        "contract",
+        "auth"
+      ],
+      "json": {
+        "message": "골든 시나리오 준비 점검 {{run_id}}",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-auth-check",
+          "channel": "web",
+          "activity": "baseline",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true
+      }
+    },
+    {
+      "id": "golden-auth-admin-integration-connected",
+      "tags": [
+        "golden",
+        "contract",
+        "admin"
+      ],
+      "method": "GET",
+      "path": "/api/mcp/servers",
+      "auth": "admin",
+      "json": null,
+      "expect": {
+        "status": 200,
+        "jsonRegex": {
+          "0.name": "(?i)integration"
+        }
+      }
+    },
+    {
+      "id": "golden-route-code_host_add_pr_comment",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host workspace=sample-workspace, repository=sample-service, prId=1 에 '테스트 코멘트'를 추가해줘. 반드시 `code_host_add_pr_comment` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_add_pr_comment",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_add_pr_comment"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_approve_pr",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host PR 승인 시도해줘. 반드시 `code_host_approve_pr` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_approve_pr",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_approve_pr"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_get_pr",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host workspace=sample-workspace, repository=sample-service, prId=1 의 PR 상세를 조회해줘. 반드시 `code_host_get_pr` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_get_pr",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_get_pr"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_list_branches",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host 브랜치 목록 보여줘. 반드시 `code_host_list_branches` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_list_branches",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_list_branches"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_list_prs",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host workspace=sample-workspace, repository=sample-service 의 PR 목록을 조회해줘. 반드시 `code_host_list_prs` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_list_prs",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_list_prs"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_list_repositories",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host 저장소 목록 보여줘. 반드시 `code_host_list_repositories` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_list_repositories",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_list_repositories"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_review_queue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host 리뷰 대기열 정리해줘. 반드시 `code_host_review_queue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_review_queue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_review_queue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_review_sla_alerts",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host 리뷰 SLA 경고를 점검해줘. 반드시 `code_host_review_sla_alerts` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_review_sla_alerts",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_review_sla_alerts"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-code_host_stale_prs",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "code_host"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] code host workspace=sample-workspace, repository=sample-service, staleDays=7 기준으로 오래된 PR 찾아줘. 반드시 `code_host_stale_prs` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-code_host_stale_prs",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "code_host_stale_prs"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_incident_postmortem",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base spaceId=SAMPLE, title='장애 포스트모템', incidentDate='2026-03-01', summary='일시 장애', timeline='10:00 감지, 10:30 복구', rootCause='DB 연결 불안정', actionItems='재시도 정책 보강'으로 문서 생성해줘. 반드시 `knowledge_create_incident_postmortem` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_incident_postmortem",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_incident_postmortem"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_meeting_notes",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base spaceId=SAMPLE, title='주간 회의록', meetingDate='2026-03-03', attendees='owner-1,owner-2', agenda='진행상황', decisions='다음주 릴리즈', actionItems='테스트 자동화'로 회의록 페이지 만들어줘. 반드시 `knowledge_create_meeting_notes` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_meeting_notes",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_meeting_notes"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_page",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base에 테스트 페이지 생성해줘. 반드시 `knowledge_create_page` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_page",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_page"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_runbook",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base spaceId=SAMPLE, title='Reactor Runbook', serviceName='reactor', summary='운영 런북', owner='owner-1', oncallChannel='#support'로 런북 페이지 생성해줘. 반드시 `knowledge_create_runbook` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_runbook",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_runbook"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_sprint_summary",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base spaceId=SAMPLE, title='스프린트 요약', sprintName='Sprint-42', period='2026-03-01~2026-03-14', highlights='핵심 기능 완료', risks='일부 지연'으로 요약 페이지 만들어줘. 반드시 `knowledge_create_sprint_summary` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_sprint_summary",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_sprint_summary"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_weekly_auto_summary_page",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base 주간 자동 요약 페이지 생성해줘. 반드시 `knowledge_create_weekly_auto_summary_page` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_weekly_auto_summary_page",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_weekly_auto_summary_page"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_create_weekly_status_report",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base spaceId=SAMPLE, title='주간 상태 리포트', weekLabel='2026-W10', team='sample-team', highlights='안정화 진행', plannedWork='MCP 개선', risks='권한 이슈'로 페이지 만들어줘. 반드시 `knowledge_create_weekly_status_report` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_create_weekly_status_report",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_create_weekly_status_report"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_generate_weekly_auto_summary_draft",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base 주간 자동 요약 초안 생성해줘. 반드시 `knowledge_generate_weekly_auto_summary_draft` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_generate_weekly_auto_summary_draft",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_generate_weekly_auto_summary_draft"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_get_page",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base pageId=123456 페이지 상세 정보를 조회해줘. 반드시 `knowledge_get_page` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_get_page",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_get_page"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_get_page_content",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base pageId=123456 페이지 본문 내용을 가져와줘. 반드시 `knowledge_get_page_content` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_get_page_content",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_get_page_content"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_list_spaces",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base 스페이스 목록 보여줘. 반드시 `knowledge_list_spaces` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_list_spaces",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_list_spaces"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_search",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base에서 이번 주 리포트 관련 페이지를 찾아줘. 반드시 `knowledge_search` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_search",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_search"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_search_by_text",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base에서 sprint 키워드로 검색해줘. 반드시 `knowledge_search_by_text` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_search_by_text",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_search_by_text"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_answer_question",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base를 기준으로 우리 팀의 온콜 정책을 알려줘. 반드시 `knowledge_answer_question` 도구를 1회 호출하고, 근거가 부족하면 부족하다고 말하되 한국어 한 문장으로만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_answer_question",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_answer_question"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-knowledge_update_page",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "knowledge"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledge base pageId=123456, version=1, title='E2E Update', body='자동 검증 업데이트'로 페이지를 업데이트해줘. 반드시 `knowledge_update_page` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-knowledge_update_page",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "knowledge_update_page"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_add_comment",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123 이슈에 테스트 코멘트를 남겨줘. 반드시 `issue_add_comment` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_add_comment",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_add_comment"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_assign_issue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123 이슈를 담당자에게 할당해줘. 반드시 `issue_assign_issue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_assign_issue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_assign_issue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_blocker_digest",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker 프로젝트 DEV 기준 blocker 이슈 요약 보고서를 만들어줘. 반드시 `issue_blocker_digest` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_blocker_digest",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_blocker_digest"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_create_issue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker에 테스트 이슈 생성해줘. 반드시 `issue_create_issue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_create_issue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_create_issue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_create_subtask",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123 하위 작업 하나 생성해줘. 반드시 `issue_create_subtask` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_create_subtask",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_create_subtask"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_daily_briefing",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker 프로젝트 DEV 기준으로 오늘 일일 브리핑을 만들어줘. 반드시 `issue_daily_briefing` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_daily_briefing",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_daily_briefing"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_due_soon_issues",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] 마감 임박 issue tracker 이슈를 조회해줘. 반드시 `issue_due_soon_issues` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_due_soon_issues",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_due_soon_issues"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_get_issue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker 이슈 DEV-123 내용을 확인해줘. 반드시 `issue_get_issue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_get_issue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_get_issue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_get_transitions",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123에서 가능한 전이 목록 보여줘. 반드시 `issue_get_transitions` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_get_transitions",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_get_transitions"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_link_issues",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123과 DEV-456 이슈를 연관 관계로 연결해줘. 반드시 `issue_link_issues` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_link_issues",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_link_issues"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_list_projects",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker 프로젝트 목록 보여줘. 반드시 `issue_list_projects` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_list_projects",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_list_projects"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_my_open_issues",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] 내가 담당한 issue tracker 오픈 이슈 목록 알려줘. 반드시 `issue_my_open_issues` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_my_open_issues",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_my_open_issues"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_search_by_text",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker에서 payment 키워드로 검색해줘. 반드시 `issue_search_by_text` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_search_by_text",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_search_by_text"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_search_issues",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue query `project = DEV ORDER BY created DESC` 기준으로 최근 issue tracker 이슈를 찾아서 요약해줘. 반드시 `issue_search_issues` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_search_issues",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_search_issues"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_transition_issue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123 이슈 상태를 In Progress로 변경 시도해줘. 반드시 `issue_transition_issue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_transition_issue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_transition_issue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-issue_update_issue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "issue"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issue tracker DEV-123 이슈 설명을 업데이트해줘. 반드시 `issue_update_issue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-issue_update_issue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "issue_update_issue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_action_items_to_issue",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] knowledgePageId=123456, issueProjectKey=DEV, issueType=Task, dryRun=true, maxCreate=5 조건으로 액션 아이템을 issue tracker 이슈로 변환해줘. 반드시 `work_action_items_to_issue` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_action_items_to_issue",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_action_items_to_issue"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_delete_briefing_profile",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] 업무 브리핑 프로필 하나 삭제해줘. 반드시 `work_delete_briefing_profile` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_delete_briefing_profile",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_delete_briefing_profile"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_list_briefing_profiles",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] 업무 브리핑 프로필 목록을 보여줘. 반드시 `work_list_briefing_profiles` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_list_briefing_profiles",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_list_briefing_profiles"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_morning_briefing",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] 오늘 아침 업무 브리핑 만들어줘. 반드시 `work_morning_briefing` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_morning_briefing",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_morning_briefing"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_prepare_standup_update",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] issueProjectKey=DEV, codeHostWorkspace=sample-workspace, codeHostRepository=sample-service, knowledgeKeyword=weekly 조건으로 스탠드업 업데이트 초안 작성해줘. 반드시 `work_prepare_standup_update` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_prepare_standup_update",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_prepare_standup_update"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_release_readiness_pack",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] releaseName='v1.0.0', issueProjectKey='DEV', codeHostWorkspace='sample-workspace', codeHostRepository='sample-service', knowledgeKeyword='release', dueSoonDays=3, reviewSlaHours=24로 릴리즈 준비 상태 패키지 만들어줘. 반드시 `work_release_readiness_pack` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_release_readiness_pack",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_release_readiness_pack"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_release_risk_digest",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] releaseName='v1.0.0', issueProjectKey='DEV', codeHostWorkspace='sample-workspace', codeHostRepository='sample-service', knowledgeKeyword='release'로 릴리즈 리스크 다이제스트 만들어줘. 반드시 `work_release_risk_digest` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_release_risk_digest",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_release_risk_digest"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    },
+    {
+      "id": "golden-route-work_set_briefing_profile",
+      "tags": [
+        "golden",
+        "integration",
+        "routing",
+        "work"
+      ],
+      "matrix": {
+        "channel": [
+          "web",
+          "team_chat",
+          "api"
+        ],
+        "activity": [
+          "first_contact",
+          "follow_up",
+          "incident",
+          "daily_ops",
+          "release",
+          "handoff"
+        ],
+        "persona": [
+          "pm",
+          "developer",
+          "qa",
+          "oncall"
+        ]
+      },
+      "json": {
+        "message": "[persona={persona} activity={activity} channel={channel}] name=default, issueProjectKey=DEV, codeHostWorkspace=sample-workspace, codeHostRepository=sample-service, knowledgeKeyword=weekly 로 업무 브리핑 프로필 저장해줘. 반드시 `work_set_briefing_profile` 도구를 1회 호출하고 한국어 한 문장으로 결과만 답해줘.",
+        "metadata": {
+          "sessionId": "{{run_id}}-golden-{{channel}}-{{activity}}-{{persona}}-work_set_briefing_profile",
+          "channel": "{{channel}}",
+          "activity": "{{activity}}",
+          "persona": "{{persona}}",
+          "source": "golden-scenario-matrix"
+        }
+      },
+      "expect": {
+        "status": 200,
+        "success": true,
+        "toolsUsedAll": [
+          "work_set_briefing_profile"
+        ],
+        "contentNotRegex": [
+          "(?i)unknown error occurred",
+          "(?i)an unknown error occurred",
+          "(?i)rate limit exceeded"
+        ]
+      }
+    }
+  ]
+}

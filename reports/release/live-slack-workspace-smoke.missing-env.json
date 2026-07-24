@@ -1,0 +1,1 @@
+{"checks":{"required_env":{"missing":["REACTOR_SLACK_SIGNING_SECRET","REACTOR_SLACK_BOT_TOKEN"],"status":"failed","variables":["REACTOR_SLACK_SIGNING_SECRET","REACTOR_SLACK_BOT_TOKEN"]}},"error":"missing required Slack environment","ok":false,"scope":"live","status":"skipped"}

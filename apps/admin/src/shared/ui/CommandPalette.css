@@ -1,0 +1,215 @@
+.cmd-palette-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: var(--z-modal);
+  backdrop-filter: blur(4px);
+}
+
+.cmd-palette {
+  max-width: 560px;
+  margin: 80px auto 0;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-standard);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  animation: cmd-palette-enter 0.15s ease-out;
+}
+
+@keyframes cmd-palette-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.cmd-palette__input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: var(--space-4) var(--space-4);
+  font-size: var(--text-md);
+  color: var(--text-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+.cmd-palette__input::placeholder {
+  color: var(--text-dim);
+}
+
+.cmd-palette__divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.cmd-palette__list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: var(--space-2);
+}
+
+.cmd-palette__group {
+  color: var(--text-dim);
+  font-size: var(--text-xxs);
+  text-transform: uppercase;
+  padding: var(--space-2) var(--space-4) var(--space-1);
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-emphasis);
+}
+
+.cmd-palette__item {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.cmd-palette__item:hover,
+.cmd-palette__item--selected {
+  background: var(--bg-hover);
+}
+
+.cmd-palette__item-icon {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.cmd-palette__item--selected .cmd-palette__item-icon {
+  color: var(--accent);
+}
+
+.cmd-palette__action-glyph {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--text-dim);
+  display: inline-block;
+}
+
+.cmd-palette__item--selected .cmd-palette__action-glyph {
+  background: var(--accent);
+}
+
+.cmd-palette__scope-chip {
+  flex-shrink: 0;
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border-standard);
+  min-width: 56px;
+  text-align: center;
+}
+
+.cmd-palette__item--selected .cmd-palette__scope-chip {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.cmd-palette__item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cmd-palette__item-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--text-primary);
+  font-weight: var(--font-weight-emphasis);
+  font-size: var(--text-sm);
+}
+
+.cmd-palette__step {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  line-height: 1;
+}
+
+.cmd-palette__item--selected .cmd-palette__step {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.cmd-palette__item-desc {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cmd-palette__empty {
+  text-align: center;
+  padding: var(--space-10);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.cmd-palette__footer {
+  border-top: 1px solid var(--border-standard);
+  padding: var(--space-2) var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  color: var(--text-dim);
+  font-size: var(--text-xxs);
+}
+
+.cmd-palette__footer-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.cmd-palette__kbd {
+  background: var(--bg-surface);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  border: 1px solid var(--border-standard);
+  color: var(--text-muted);
+}
+
+/* Reduced motion: skip the scale+translate enter animation entirely so
+ * the palette appears in place rather than zooming. */
+@media (prefers-reduced-motion: reduce) {
+  .command-palette,
+  .command-palette__item {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

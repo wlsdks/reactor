@@ -1,0 +1,16 @@
+node_modules/
+dist/
+playwright-report/
+test-results/
+.playwright-mcp/
+.superpowers/
+.codegraph/
+coverage/
+.env
+*.local
+.worktrees/
+
+# npm lockfile (this project uses pnpm)
+package-lock.json
+*.png
+.DS_Store

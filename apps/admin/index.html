@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      Favicon + OS identity (BX audit P1-2).
+      TODO(designer): generate proper sized favicon assets
+        (favicon.ico, favicon-16x16.png, favicon-32x32.png,
+         apple-touch-icon.png 180x180, android-chrome-192x192.png, android-chrome-512x512.png)
+      from the brand mark in /logo.png and drop them in /public/.
+      Until then, all sizes fall back to /logo.png — browsers will scale.
+    -->
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/logo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/logo.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0C1017" />
+    <meta name="apple-mobile-web-app-title" content="Reactor Admin" />
+    <meta name="application-name" content="Reactor Admin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Reactor Admin</title>
+    <!--
+      SEO + social share metadata (BX audit P1-2 follow-up).
+      Page-specific titles are set per route via useDocumentTitle; the
+      description / Open Graph / Twitter tags below describe the app as a
+      whole and are surfaced when the URL is shared in Slack, Notion, etc.
+    -->
+    <meta name="description" content="Reactor 관리자 콘솔. AI 에이전트, 페르소나, MCP 서버, 가드, 감사 로그 통합 관리." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Reactor Admin" />
+    <meta property="og:description" content="Reactor 관리자 콘솔. AI 에이전트, 페르소나, MCP 서버, 가드, 감사 로그 통합 관리." />
+    <meta property="og:image" content="/logo.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Reactor Admin" />
+    <meta name="twitter:description" content="Reactor 관리자 콘솔. AI 에이전트, 페르소나, MCP 서버, 가드, 감사 로그 통합 관리." />
+    <meta name="twitter:image" content="/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

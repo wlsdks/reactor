@@ -1,0 +1,1073 @@
+/* ── Retro Shell Layout ── */
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh; /* dynamic viewport height — respects mobile browser chrome */
+  overflow: hidden;
+  background: var(--bg-root);
+  padding-top: var(--safe-top);
+}
+
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.app-header {
+  height: var(--header-height);
+  background: linear-gradient(180deg, var(--bg-surface-2) 0%, var(--bg-surface-1) 100%);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
+.app-header-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.logo-badge {
+  width: var(--brand-mark-header);
+  height: var(--brand-mark-header);
+  flex-shrink: 0;
+  color: var(--brand-mark-foreground);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-prompt {
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-strong);
+  color: var(--brand-mark-foreground);
+  letter-spacing: 0;
+}
+
+.brand-subtitle {
+  font-size: var(--text-xxs);
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}
+
+.app-header-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.app-header-spacer { flex: 1; }
+
+.app-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* Header-context btn-icon polish — pairs the global .btn-icon (color/border
+   accent on hover) with a subtle --bg-hover surface shift so the button
+   visibly responds against the dark header gradient. Mirrors L-17/L-18/L-21
+   color-only fast transition pattern. */
+.app-header .btn-icon {
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+.app-header .btn-icon:hover {
+  background: var(--bg-hover);
+}
+
+.app-header-account {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.account-menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 180px;
+}
+
+.account-menu-trigger__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: var(--z-popover);
+  width: 224px;
+  padding: var(--space-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+.account-menu__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  overflow: hidden;
+}
+
+.account-menu__identity strong {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-menu__identity span {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+}
+
+.account-menu__divider {
+  height: 1px;
+  margin: var(--space-1) 0;
+  background: var(--border);
+}
+
+.account-menu__item {
+  width: 100%;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: var(--text-xs);
+  text-align: left;
+}
+
+.account-menu__item:hover,
+.account-menu__item:focus-visible {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  outline: none;
+}
+
+.account-menu__item--danger {
+  color: var(--red);
+}
+
+.clock {
+  font-size: var(--text-xxs);
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.clock-time {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-weight: var(--font-weight-emphasis);
+}
+
+.btn-group {
+  display: flex;
+  border: 1px solid var(--border);
+}
+
+.btn-group .btn-icon {
+  border: none;
+  border-right: 1px solid var(--border);
+}
+
+.btn-group .btn-icon:last-child {
+  border-right: none;
+}
+
+.user-badge {
+  font-size: var(--text-xxs);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  padding: 3px var(--space-2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── Command palette trigger (header) ── */
+.cmd-palette-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  border: 1px solid var(--border-standard, var(--border));
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  cursor: pointer;
+  /* Color/border/background are color-only props → --duration-fast / --ease-out
+     per token guidance (mirrors L-17/L-18/L-21 polish patterns). */
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.cmd-palette-trigger:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.cmd-palette-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.cmd-palette-trigger__label {
+  line-height: 1;
+}
+
+.cmd-palette-trigger__kbd {
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-standard, var(--border));
+  border-radius: var(--radius-sm);
+  padding: 1px var(--space-1);
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+/* ── Header Health Badge ── */
+.header-health-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: transparent;
+  border: 1px solid var(--border-standard, var(--border));
+  border-radius: var(--radius-sm);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  /* Color/border/background are color-only props → --duration-fast / --ease-out
+     per token guidance (mirrors L-17/L-18/L-21 polish patterns). */
+  transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.header-health-badge:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.header-health-badge:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.header-health-badge__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.header-health-badge__label {
+  line-height: 1;
+}
+
+.header-health-badge__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--color-error-dim, var(--red-dim));
+  color: var(--color-error, var(--red));
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  line-height: 1;
+  font-weight: var(--font-weight-emphasis);
+}
+
+.header-health-badge--warn .header-health-badge__count {
+  background: var(--color-warning-dim);
+  color: var(--color-warning);
+}
+
+/* ── Global Status Strip ──
+   Persistent ambient strip in the header showing live aggregate state across
+   feature domains (MCP / 이슈 / 승인 / 마지막 갱신). Each chip is a Link so
+   keyboard users can tab through; the strip stays quiet visually so it does
+   not compete with the brand or primary actions. */
+.global-status-strip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.global-status-strip__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-family: var(--font);
+  font-size: var(--text-xs);
+  line-height: 1;
+  /* Color-only transitions on --duration-fast / --ease-out per token guidance
+     (mirrors L-17/L-18/L-21 polish patterns). */
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+
+.global-status-strip__chip:hover {
+  background: var(--bg-hover);
+  color: var(--accent);
+}
+
+.global-status-strip__chip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.global-status-strip__chip--static,
+.global-status-strip__chip--static:hover {
+  /* "마지막 갱신" is informational only — no hover affordance, no link. */
+  background: transparent;
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.global-status-strip__chip-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: var(--text-xxs);
+  letter-spacing: 0.06em;
+}
+
+.global-status-strip__chip-value {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-emphasis);
+}
+
+/* Active counts (issues / approvals > 0) get a subtle amber tint on the
+   numeric value to draw the eye without the demanding feel of a badge. */
+.global-status-strip__chip[data-active='true'] .global-status-strip__chip-value {
+  color: var(--accent);
+}
+
+/* ── Side Navigation ── */
+.sidenav {
+  position: relative;
+  width: var(--sidebar-width-collapsed);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: width var(--duration-base) var(--ease-standard);
+}
+
+.sidenav.expanded { width: var(--sidebar-width-expanded); }
+
+.sidenav-toggle {
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-family: var(--font);
+  /* Color/background hover uses --duration-fast / --ease-out per token guidance
+     (mirrors L-17/L-18/L-21 polish — color-only props on the fast curve). */
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+.sidenav.expanded .sidenav-toggle {
+  justify-content: flex-start;
+  padding: 0 var(--space-3);
+}
+.sidenav-toggle:hover {
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+}
+.sidenav-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+.sidenav-toggle-label {
+  font-size: var(--text-xxs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.sidenav-view-controls {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin: var(--space-2) var(--space-3) var(--space-1);
+  padding: 2px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+}
+
+.sidenav-view-control {
+  min-width: 0;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: 0 var(--space-2);
+  border: 0;
+  border-radius: calc(var(--radius-sm) - 1px);
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font);
+  font-size: var(--text-xxs);
+  white-space: nowrap;
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+
+.sidenav-view-control:hover {
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+}
+
+.sidenav-view-control[aria-pressed='true'] {
+  color: var(--text-primary);
+  background: var(--bg-active);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+
+.sidenav-view-control:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.sidenav-group {
+  padding: 2px 0;
+}
+
+.sidenav-group-heading {
+  margin: 0;
+}
+
+.sidenav-group-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 8px);
+  background: transparent;
+  border: none;
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  margin: 0 4px;
+  cursor: pointer;
+  font-family: var(--font);
+  text-align: left;
+  border-radius: 8px;
+  /* Color-only hover transitions on --duration-fast / --ease-out per token
+     guidance (mirrors L-17/L-18/L-21 polish). */
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+}
+
+.sidenav-group-toggle:hover {
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+}
+
+.sidenav-group-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.sidenav-group-label {
+  /* 11px (--text-xxs) — WCAG 최소 가독성을 위해 10px 에서 승격. text-muted 가
+     sidebar 표면에 대해 AA 대비 유지. */
+  font-size: var(--text-xxs);
+  color: var(--text-muted);
+  letter-spacing: 0;
+  font-weight: var(--font-weight-emphasis);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidenav-group-step-range {
+  min-width: 36px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-right: var(--space-2);
+  border: 0;
+  border-radius: 0;
+  color: var(--text-muted);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  line-height: 1;
+}
+
+.sidenav-group-description {
+  display: none;
+  margin: 0;
+  color: var(--text-dim);
+  font-size: var(--text-xxs);
+  line-height: var(--leading-normal);
+}
+
+.sidenav-group-chevron {
+  color: var(--text-dim);
+  flex-shrink: 0;
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.sidenav-group-chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+.sidenav-group-toggle:hover .sidenav-group-chevron {
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidenav-group-chevron { transition: none; }
+}
+
+.sidenav-group-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sidenav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px var(--space-3);
+}
+
+.sidenav-item {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: calc(100% - 8px);
+  min-height: var(--icon-box-default);
+  padding: 0;
+  border-radius: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  /* Color-only hover transitions on --duration-fast / --ease-out per token
+     guidance (mirrors L-17/L-18/L-21 polish patterns). Background promoted to
+     --bg-hover so hover feedback is visible against the slightly darker
+     sidebar surface. */
+  transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
+  margin: 0 var(--space-1);
+}
+.sidenav-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+.sidenav-item.active {
+  color: var(--navigation-item-active-foreground);
+  background: var(--navigation-item-active-surface);
+  font-weight: var(--font-weight-emphasis);
+}
+.sidenav-item:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.sidenav-item-icon {
+  width: var(--icon-box-default);
+  height: var(--icon-box-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidenav-item-icon svg {
+  display: block;
+  flex: 0 0 auto;
+  overflow: visible;
+}
+
+.sidenav-step {
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--text-muted);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  line-height: 1;
+  margin-right: var(--space-2);
+}
+
+.sidenav-item.active .sidenav-step {
+  color: var(--navigation-item-active-icon);
+  background: transparent;
+}
+
+.sidenav-item.active .sidenav-item-icon {
+  color: var(--navigation-item-active-icon);
+}
+
+.sidenav-item-copy {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.sidenav-item-label {
+  /* 13px (--text-sm) — 가독성을 위해 12px 에서 승격. Linear/Vercel 의 sidenav
+     라벨과 동일 사이즈. 이 아래로 내리면 WCAG 읽기 난이도 급상승. */
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-emphasis);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: opacity var(--duration-base) var(--ease-standard);
+}
+
+.sidenav-item-description {
+  display: none;
+  color: var(--text-dim);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidenav:not(.expanded) .sidenav-item-label {
+  opacity: 0;
+  width: 0;
+}
+.sidenav:not(.expanded) .sidenav-item-copy {
+  width: 0;
+  overflow: hidden;
+}
+.sidenav:not(.expanded) .sidenav-group-label {
+  opacity: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.sidenav:not(.expanded) .sidenav-group-heading {
+  display: none;
+}
+
+.sidenav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  padding: 1px var(--space-2);
+  border: 1px solid;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xxs);
+  font-weight: var(--font-weight-emphasis);
+  letter-spacing: 0.04em;
+  margin-left: auto;
+}
+.sidenav-badge.critical {
+  color: var(--red);
+  background: var(--red-dim);
+  border-color: var(--color-error-border);
+}
+.sidenav-badge.warning {
+  color: var(--yellow);
+  background: var(--yellow-dim);
+  border-color: var(--color-warning-border);
+}
+
+/* ── Sidebar Scroll Indicators ── */
+.sidenav-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  position: relative;
+}
+.sidenav-scroll-area::-webkit-scrollbar { display: none; }
+
+.sidenav-fade {
+  position: sticky;
+  left: 0;
+  right: 0;
+  height: 32px;
+  pointer-events: none;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.sidenav-fade--top {
+  top: 0;
+  background: linear-gradient(to bottom, var(--bg-surface) 0%, transparent 100%);
+  margin-bottom: -32px;
+}
+
+.sidenav-fade--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--bg-surface) 0%, transparent 100%);
+  margin-top: -32px;
+}
+
+.sidenav-scroll-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  border: none;
+  border-top: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color var(--duration-base) var(--ease-standard);
+  font-family: var(--font);
+  width: 100%;
+  padding: 0;
+}
+
+.sidenav-scroll-hint:hover {
+  color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidenav,
+  .sidenav-item-label { transition: none; }
+  .sidenav::before { opacity: 0.3; }
+}
+
+/* Mobile menu button — hidden on desktop */
+.mobile-menu-btn { display: none; }
+
+/* Touch target minimum — applied globally for interactive elements */
+.sidenav-item,
+.sidenav-toggle { min-height: 44px; }
+
+/* ── Tablet (768–1024px): sidebar auto-collapsed ──
+ * At this tier the sidebar defaults to icon-only; the user can tap the toggle
+ * to expand persistently (stored under `reactor-admin-sidebar-collapsed`).
+ *
+ * On pointer-capable devices (mouse, trackpad) we also reveal labels on
+ * hover without mutating the persisted preference — this gives a
+ * "hover-to-peek" affordance familiar from Linear/Vercel. Touch-only devices
+ * do not trigger :hover so tablets continue to require an explicit tap.
+ */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidenav { width: var(--sidebar-width-collapsed); }
+  .sidenav .sidenav-item-label { opacity: 0; width: 0; }
+  .sidenav .sidenav-group-label { opacity: 0; height: 0; margin: 0; padding: 0; overflow: hidden; }
+  .sidenav .sidenav-group-heading { display: none; }
+  .sidenav.expanded { width: var(--sidebar-width-expanded); }
+  .sidenav.expanded .sidenav-item-label { opacity: 1; width: auto; }
+  .sidenav.expanded .sidenav-group-label { opacity: 1; height: auto; padding: 0; }
+  .sidenav.expanded .sidenav-group-heading { display: block; }
+
+  /* Hover-to-peek: only on fine-pointer (non-touch) devices so tablets stay
+   * tap-driven and avoid the "phantom hover" that plagues touch UI. */
+  @media (hover: hover) and (pointer: fine) {
+    .sidenav:hover { width: 248px; }
+    .sidenav:hover .sidenav-item-label { opacity: 1; width: auto; }
+    .sidenav:hover .sidenav-group-label { opacity: 1; height: auto; padding: 0; }
+    .sidenav:hover .sidenav-group-heading { display: block; }
+  }
+
+  /* Tap targets ≥44px on touch widths per WCAG AA / DESIGN.md. */
+  .sidenav-item { min-height: 44px; }
+  .sidenav-toggle { min-height: 44px; }
+}
+
+/* ── Mobile (<768px): overlay sidebar + compact header ── */
+@media (max-width: 768px) {
+  /* Sidebar: off-canvas overlay */
+  .sidenav {
+    position: fixed;
+    top: var(--header-height);
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-sticky);
+    width: 260px;
+    transform: translateX(-100%);
+    transition: transform var(--duration-base) var(--ease-standard);
+    padding-bottom: var(--safe-bottom);
+  }
+  .sidenav.expanded {
+    transform: translateX(0);
+    width: 260px;
+  }
+  /* Force labels visible when expanded on mobile */
+  .sidenav.expanded .sidenav-item-label { opacity: 1; width: auto; }
+  .sidenav.expanded .sidenav-group-label { opacity: 1; height: auto; padding: 0; }
+  .sidenav.expanded .sidenav-group-heading { display: block; }
+
+  /* Overlay backdrop */
+  .sidenav-overlay {
+    position: fixed;
+    inset: 0;
+    top: var(--header-height);
+    background: var(--overlay);
+    z-index: calc(var(--z-sticky) - 1);
+  }
+
+  /* Show mobile menu button in header */
+  .mobile-menu-btn { display: flex; }
+
+  /* Hide sidebar toggle inside sidebar (header button is used) */
+  .sidenav-toggle { display: none; }
+
+  /* Header: compact */
+  .app-header {
+    padding: 0 var(--space-3);
+    padding-left: calc(var(--space-3) + var(--safe-left));
+    padding-right: calc(var(--space-3) + var(--safe-right));
+    gap: var(--space-2);
+  }
+  .brand-text { display: none; }
+  .app-header-sep { display: none; }
+  .clock { display: none; }
+  .user-badge { display: none; }
+  .view-switch { display: none; }
+  .account-menu-trigger {
+    width: 36px;
+    min-width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .account-menu-trigger__label,
+  .account-menu-trigger .lucide-chevron-down { display: none; }
+  .account-menu {
+    position: fixed;
+    top: calc(var(--header-height) + var(--safe-top) + var(--space-2));
+    right: calc(var(--space-3) + var(--safe-right));
+  }
+  /* Status strip is too dense to remain useful on phones — hide entirely.
+     Each chip's destination is still reachable via the sidenav / cmd
+     palette, so no functionality is lost. */
+  .global-status-strip { display: none; }
+
+  /* Content: less padding + safe areas */
+  .app-content {
+    padding: var(--space-3);
+    padding-bottom: calc(var(--space-3) + var(--safe-bottom));
+    padding-left: calc(var(--space-3) + var(--safe-left));
+    padding-right: calc(var(--space-3) + var(--safe-right));
+  }
+
+  /* Footer: compact + safe area */
+  .app-footer {
+    padding: 0 var(--space-3);
+    padding-left: calc(var(--space-3) + var(--safe-left));
+    padding-right: calc(var(--space-3) + var(--safe-right));
+    padding-bottom: var(--safe-bottom);
+    font-size: var(--text-xxs);
+  }
+
+  /* Split layouts: single column */
+  .split-layout { grid-template-columns: 1fr; }
+
+  /* Page headers: stack */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+
+  /* Detail panels: reduce padding */
+  .detail-panel { padding: var(--space-3); }
+
+  /* Stat groups: stack */
+  .dashboard-stats { grid-template-columns: 1fr; }
+
+  /* Data tables: scroll wrapper */
+  .data-table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Modals: full width on mobile */
+  .modal { width: calc(100vw - var(--space-4)); max-width: none; }
+  .modal-large { width: calc(100vw - var(--space-4)); max-width: none; }
+
+  /* Inline stats bar: wrap */
+  .inline-stats-bar { flex-wrap: wrap; }
+}
+
+/* ── Small phone (<375px — iPhone SE, Galaxy Fold) ── */
+@media (max-width: 375px) {
+  .app-header {
+    height: 48px;
+    gap: var(--space-1);
+  }
+  .logo-badge { width: var(--brand-mark-compact); height: var(--brand-mark-compact); }
+
+  .app-content {
+    padding: var(--space-2);
+    padding-bottom: calc(var(--space-2) + var(--safe-bottom));
+  }
+
+  .page-title { font-size: var(--text-lg); }
+  .section-title { font-size: var(--text-md); }
+
+  .btn { padding: var(--space-2) var(--space-3); font-size: var(--text-xxs); }
+
+  .stat-group-value { font-size: var(--text-lg); }
+
+  .sidenav {
+    width: 100vw;
+  }
+  .sidenav.expanded {
+    width: 100vw;
+  }
+}
+
+/* ── Landscape phone: reduce heights ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .app-header { height: 44px; }
+  .logo-badge { width: var(--brand-mark-compact); height: var(--brand-mark-compact); }
+  .sidenav-item { min-height: 36px; }
+  .sidenav-toggle { height: 36px; min-height: 36px; }
+  .app-footer { height: 28px; }
+}
+
+/* ── Content ── */
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--workspace-gutter);
+  /* macOS hides overlay scrollbars by default, leaving operators unsure
+   * whether the page can scroll. Reserve a stable gutter and paint a
+   * subtle thumb so the affordance is always visible without colliding
+   * with content reflow. Firefox uses `scrollbar-*`; WebKit/Chromium
+   * uses the pseudo-elements below. */
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.app-content > * {
+  max-width: var(--workspace-max-width);
+  margin-inline: auto;
+}
+
+.app-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.app-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-sm);
+}
+
+.app-content::-webkit-scrollbar-thumb:hover {
+  background: var(--text-dim);
+}
+
+/* ── Footer ──
+ * Quiet Authority: a single muted line of metadata (console name · role).
+ * The previous footer used uppercase + monospace + a green "READY" pill,
+ * which read as mainframe affectation rather than information. Per BX
+ * audit P1-3 we strip the pill, drop monospace/uppercase, and let the
+ * tenant + localized role speak in the body voice.
+ */
+.app-footer {
+  flex-shrink: 0;
+  height: var(--footer-height);
+  background: var(--bg-root);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-5);
+  font-size: var(--text-xxs);
+  color: var(--text-muted);
+  z-index: 50;
+}
+
+.app-footer-tenant {
+  color: var(--text-muted);
+}
+
+.app-footer-role {
+  color: var(--text-muted);
+  padding-left: var(--space-3);
+  border-left: 1px solid var(--border);
+}
