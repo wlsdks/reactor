@@ -11,7 +11,14 @@ from reactor.auth.api_keys import (
     parse_api_key_record,
 )
 from reactor.auth.jwt import JwtTokenService
-from reactor.auth.rbac import AuthPrincipal, UserRole, parse_groups, parse_role
+from reactor.auth.rbac import (
+    ANONYMOUS_USER_ID,
+    AuthPrincipal,
+    UserRole,
+    local_identity_headers_allowed,
+    parse_groups,
+    parse_role,
+)
 from reactor.core.settings import Settings, get_settings
 
 __all__ = [
@@ -32,17 +39,24 @@ async def principal_from_headers(
     x_reactor_groups: Annotated[str | None, Header(alias="X-Reactor-Groups")] = None,
     x_reactor_api_key: Annotated[str | None, Header(alias="X-Reactor-API-Key")] = None,
 ) -> AuthPrincipal:
+    settings = auth_settings_from_request(request)
     token_principal = await token_principal_from_request(request, authorization)
     if token_principal is not None:
         return token_principal
     api_key_principal = api_key_principal_from_header(
         x_reactor_api_key,
-        settings=auth_settings_from_request(request),
+        settings=settings,
     )
     if api_key_principal is not None:
         return api_key_principal
     if x_reactor_api_key is not None and x_reactor_api_key.strip():
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="invalid API key")
+    if not local_identity_headers_allowed(settings.environment):
+        return AuthPrincipal(
+            user_id=ANONYMOUS_USER_ID,
+            tenant_id=settings.auth_default_tenant_id,
+            role=UserRole.USER,
+        )
     role = parse_role(x_reactor_role)
     if role == UserRole.USER and truthy(x_reactor_admin):
         role = UserRole.ADMIN

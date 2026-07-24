@@ -12,6 +12,7 @@ env/
 .pyright/
 .coverage
 htmlcov/
+coverage/
 
 # Build and packaging
 build/
@@ -33,6 +34,10 @@ logs/
 runtime-progress*.txt
 test-results/
 test-output/
+playwright-report/
+blob-report/
+*.trace.zip
+*.webm
 /artifacts/
 .cache/
 

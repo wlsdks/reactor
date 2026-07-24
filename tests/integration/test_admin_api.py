@@ -2419,7 +2419,23 @@ async def test_ops_dashboard_exposes_secret_free_release_readiness_summary(tmp_p
 def test_release_readiness_summary_fails_closed_without_provenance(tmp_path: Path) -> None:
     report_path = tmp_path / "release-readiness.json"
     report_path.write_text(
-        json.dumps({"status": "passed", "blockingReports": []}),
+        json.dumps(
+            {
+                "status": "passed",
+                "blockingReports": [],
+                "recommendedTag": "v9.9.9",
+                "recommendedVersionBump": "major",
+                "minorEligible": True,
+                "tagRecommendation": {
+                    "status": "passed",
+                    "eligible": True,
+                    "latestTag": "v9.9.8",
+                    "recommendedTag": "v9.9.9",
+                    "recommendedVersionBump": "major",
+                    "minorEligible": True,
+                },
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -2434,6 +2450,10 @@ def test_release_readiness_summary_fails_closed_without_provenance(tmp_path: Pat
     assert summary.provenance.status == "missing"
     assert summary.provenance.reason == "missing_provenance"
     assert summary.provenance.verifiedCurrentHead is False
+    assert summary.recommendedTag is None
+    assert summary.recommendedVersionBump is None
+    assert summary.minorEligible is None
+    assert summary.tagRecommendation is None
 
 
 def test_release_readiness_summary_fails_closed_when_provenance_is_stale(tmp_path: Path) -> None:

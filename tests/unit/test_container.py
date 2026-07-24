@@ -393,6 +393,39 @@ async def test_container_close_closes_cached_redis_slack_user_rate_limiter() -> 
     assert redis.closed is True
 
 
+async def test_container_close_attempts_all_resources_after_failure() -> None:
+    calls: list[str] = []
+    error = RuntimeError("publisher close failed")
+
+    class Publisher:
+        async def close(self) -> None:
+            calls.append("publisher")
+            raise error
+
+    class Limiter:
+        async def close(self) -> None:
+            calls.append("limiter")
+
+    class ExitStack:
+        async def aclose(self) -> None:
+            calls.append("exit-stack")
+
+    class Engine:
+        async def dispose(self) -> None:
+            calls.append("engine")
+
+    container = AppContainer.local(Settings(database_url=None))
+    object.__setattr__(container, "_run_lifecycle_publisher", Publisher())
+    object.__setattr__(container, "_slack_user_rate_limiter", Limiter())
+    object.__setattr__(container, "exit_stack", ExitStack())
+    object.__setattr__(container, "engine", Engine())
+
+    with pytest.raises(RuntimeError, match="publisher close failed"):
+        await container.close()
+
+    assert calls == ["publisher", "limiter", "exit-stack", "engine"]
+
+
 def test_local_container_builds_slack_messaging_client_when_bot_token_is_configured() -> None:
     container = AppContainer.local(
         Settings(

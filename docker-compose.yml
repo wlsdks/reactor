@@ -8,7 +8,7 @@ services:
       REACTOR_DATABASE_URL: postgresql://reactor:reactor@db:5432/reactor
       REACTOR_REDIS_URL: redis://redis:6379/0
     ports:
-      - "${REACTOR_PORT:-8000}:8000"
+      - "127.0.0.1:${REACTOR_PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -28,7 +28,7 @@ services:
         VITE_API_URL: ""
         VITE_IAM_URL: ${VITE_IAM_URL:-}
     ports:
-      - "${REACTOR_ADMIN_PORT:-3001}:80"
+      - "127.0.0.1:${REACTOR_ADMIN_PORT:-3001}:80"
     depends_on:
       app:
         condition: service_healthy
@@ -41,7 +41,7 @@ services:
       POSTGRES_USER: reactor
       POSTGRES_PASSWORD: reactor
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql
     healthcheck:
@@ -54,7 +54,7 @@ services:
   redis:
     image: redis:8.8.0-alpine
     ports:
-      - "${REDIS_PORT:-6379}:6379"
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
     volumes:
       - redisdata:/data
     healthcheck:

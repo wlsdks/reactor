@@ -18,7 +18,7 @@ from reactor.a2a.agent_card import build_sdk_agent_card, canonical_a2a_endpoint
 from reactor.a2a.sdk_task_store import LazyReactorA2ASdkTaskStore
 from reactor.agents.runner import RunResult
 from reactor.auth.api_keys import api_key_principal_from_header
-from reactor.auth.rbac import AuthPrincipal, UserRole, parse_role
+from reactor.auth.rbac import AuthPrincipal, UserRole, local_identity_headers_allowed, parse_role
 from reactor.core.settings import Settings, get_settings
 from reactor.kernel.ids import new_id
 from reactor.runs.service import RunService
@@ -367,6 +367,12 @@ def a2a_principal_from_request(request: Any, settings: Settings) -> AuthPrincipa
         return api_key_principal
     if api_key is not None and str(api_key).strip():
         raise HTTPException(status_code=401, detail="invalid API key")
+    if not local_identity_headers_allowed(settings.environment):
+        return AuthPrincipal(
+            user_id="a2a_peer",
+            tenant_id=settings.auth_default_tenant_id,
+            role=UserRole.USER,
+        )
     role = parse_role(request.headers.get("X-Reactor-Role"))
     if role == UserRole.USER and truthy(request.headers.get("X-Reactor-Admin")):
         role = UserRole.ADMIN

@@ -676,7 +676,8 @@ Implementation rule:
 - RAG tool ACL groups are trusted execution context, not model input. Do not expose
   caller groups in model-facing tool schemas; `ToolExecutionRequest.trusted_user_groups`
   is the only source for group ACL checks. API authentication resolves groups into
-  `AuthPrincipal.groups` from signed JWT claims or trusted gateway headers,
+  `AuthPrincipal.groups` from signed JWT claims, tenant-scoped API keys, or
+  explicitly local-only development headers,
   `RunService` copies them into `ReactorState.trusted_user_groups`, and graph/tool
   adapters copy that state into tool execution requests. Request bodies, chat metadata,
   prompts, and tool arguments must not grant or expand RAG groups.
@@ -2110,8 +2111,10 @@ Authentication and authorization:
 
 - JWT/API key auth for API clients. API key records are configured as hashed
   tenant-scoped records, not raw secrets: `key_id:tenant_id:user_id:role:sha256_hex[:groups]`.
-- tenant-scoped API keys resolve directly to `AuthPrincipal` and take precedence over
-  spoofable identity headers after verified bearer JWTs.
+- tenant-scoped API keys resolve directly to `AuthPrincipal` after verified bearer
+  JWTs. Unsigned `X-Reactor-*` identity headers are a local/test convenience only;
+  production ignores user, tenant, role, admin, and group identity headers and
+  requires a verified JWT or API key for trusted identity.
 - role checks for admin, tool registry, MCP server management, approvals
 - 403 responses include structured error bodies. FastAPI `HTTPException(403)` responses
   preserve `detail` and also include `error`, `statusCode`, and stable `code`.

@@ -125,6 +125,35 @@ async def test_auth_rejects_invalid_bearer_token_without_header_fallback() -> No
     assert response.json()["detail"] == "invalid bearer token"
 
 
+async def test_production_rejects_unsigned_admin_identity_headers() -> None:
+    app = create_app()
+    app.state.reactor = FakeContainer(
+        user_store=FakeUserStore(),
+        token_store=FakeTokenRevocationStore(),
+        settings=Settings(
+            environment="production",
+            auth_jwt_secret=SECRET,
+            auth_default_tenant_id="default",
+        ),
+    )
+    transport = ASGITransport(app=app)
+
+    async with AsyncClient(transport=transport, base_url="http://testserver") as client:
+        response = await client.get(
+            "/api/admin/capabilities",
+            headers={
+                "X-Reactor-User-Id": "spoofed_admin",
+                "X-Reactor-Tenant-Id": "spoofed_tenant",
+                "X-Reactor-Role": "ADMIN",
+                "X-Reactor-Admin": "true",
+                "X-Reactor-Groups": "executive",
+            },
+        )
+
+    assert response.status_code == 403
+    assert response.json()["detail"] == "admin access required"
+
+
 async def test_auth_fails_closed_when_jwt_revocation_store_is_unavailable() -> None:
     user = UserRecord(
         id="user_1",

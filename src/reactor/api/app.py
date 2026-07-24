@@ -80,6 +80,10 @@ class SlackReminderSchedulerRunnerProtocol(Protocol):
     async def close(self) -> None: ...
 
 
+class AsyncCloseable(Protocol):
+    async def close(self) -> None: ...
+
+
 class SocketModeContainer(Protocol):
     @property
     def settings(self) -> Settings: ...
@@ -115,19 +119,32 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
         yield
     finally:
         try:
-            if slack_reminder_scheduler_runner is not None:
-                await slack_reminder_scheduler_runner.close()
-            if prompt_lab_scheduler_runner is not None:
-                await prompt_lab_scheduler_runner.close()
-            if alert_scheduler is not None:
-                await alert_scheduler.close()
-            if scheduler_runner is not None:
-                await scheduler_runner.close()
-            if socket_mode_runner is not None:
-                await socket_mode_runner.close()
-            await container.close()
+            await close_lifespan_resources(
+                (
+                    slack_reminder_scheduler_runner,
+                    prompt_lab_scheduler_runner,
+                    alert_scheduler,
+                    scheduler_runner,
+                    socket_mode_runner,
+                    container,
+                )
+            )
         finally:
             shutdown_tracing()
+
+
+async def close_lifespan_resources(resources: tuple[AsyncCloseable | None, ...]) -> None:
+    first_error: Exception | None = None
+    for resource in resources:
+        if resource is None:
+            continue
+        try:
+            await resource.close()
+        except Exception as error:
+            if first_error is None:
+                first_error = error
+    if first_error is not None:
+        raise first_error
 
 
 async def start_socket_mode_if_enabled(container: SocketModeContainer) -> SocketModeRunner | None:

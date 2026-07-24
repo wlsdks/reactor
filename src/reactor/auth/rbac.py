@@ -5,6 +5,7 @@ from enum import StrEnum
 from hashlib import sha256
 
 ANONYMOUS_USER_ID = "anonymous"
+PRODUCTION_ENVIRONMENTS = frozenset({"prod", "production"})
 
 
 class AdminScope(StrEnum):
@@ -83,6 +84,11 @@ def parse_groups(value: str | None) -> tuple[str, ...]:
         groups.append(group)
         seen.add(group)
     return tuple(groups)
+
+
+def local_identity_headers_allowed(environment: str) -> bool:
+    """Allow unsigned identity headers only in explicitly non-production runtimes."""
+    return environment.strip().lower() not in PRODUCTION_ENVIRONMENTS
 
 
 def current_actor(principal: AuthPrincipal | None) -> str:

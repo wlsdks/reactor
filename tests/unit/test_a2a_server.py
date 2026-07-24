@@ -71,6 +71,26 @@ def test_a2a_unsigned_headers_do_not_grant_trusted_groups() -> None:
     assert principal.groups == ()
 
 
+def test_a2a_production_ignores_unsigned_identity_headers() -> None:
+    request = FakeRequest(
+        headers={
+            "X-Reactor-User-Id": "spoofed_admin",
+            "X-Reactor-Tenant-Id": "spoofed_tenant",
+            "X-Reactor-Role": "ADMIN",
+            "X-Reactor-Admin": "true",
+            "X-Reactor-Groups": "executive",
+        }
+    )
+
+    principal = a2a_principal_from_request(request, Settings(environment="production"))
+
+    assert principal == AuthPrincipal(
+        user_id="a2a_peer",
+        tenant_id="default",
+        role=UserRole.USER,
+    )
+
+
 async def test_a2a_inbound_policy_fails_closed_without_store_in_production() -> None:
     principal = ReactorA2APrincipal(
         auth=AuthPrincipal(user_id="peer_user", tenant_id="tenant_1", role=UserRole.USER),

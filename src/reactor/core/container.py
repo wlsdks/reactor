@@ -402,18 +402,36 @@ class AppContainer:
             raise
 
     async def close(self) -> None:
+        first_error: Exception | None = None
         if self._run_lifecycle_publisher is not None:
             close = getattr(self._run_lifecycle_publisher, "close", None)
             if close is not None:
-                await close()
+                try:
+                    await close()
+                except Exception as error:
+                    first_error = error
         if self._slack_user_rate_limiter is not None:
             close = getattr(self._slack_user_rate_limiter, "close", None)
             if close is not None:
-                await close()
+                try:
+                    await close()
+                except Exception as error:
+                    if first_error is None:
+                        first_error = error
         if self.exit_stack is not None:
-            await self.exit_stack.aclose()
+            try:
+                await self.exit_stack.aclose()
+            except Exception as error:
+                if first_error is None:
+                    first_error = error
         if self.engine is not None:
-            await self.engine.dispose()
+            try:
+                await self.engine.dispose()
+            except Exception as error:
+                if first_error is None:
+                    first_error = error
+        if first_error is not None:
+            raise first_error
 
     def run_store(self) -> SqlAlchemyRunStore | None:
         if self.session_factory is None:

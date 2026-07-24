@@ -5,6 +5,7 @@ from typing import Any, cast
 import pytest
 
 from reactor.api.app import (
+    close_lifespan_resources,
     lifespan,
     start_alert_scheduler_if_enabled,
     start_prompt_lab_scheduler_if_enabled,
@@ -246,6 +247,42 @@ async def test_lifespan_shutdown_closes_tracing_after_container(
         "container_open",
         "container_close",
         "tracing_shutdown",
+    ]
+
+
+async def test_lifespan_shutdown_attempts_every_close_after_failure() -> None:
+    calls: list[str] = []
+    error = RuntimeError("scheduler close failed")
+
+    class RecordingCloser:
+        def __init__(self, name: str, *, failure: Exception | None = None) -> None:
+            self.name = name
+            self.failure = failure
+
+        async def close(self) -> None:
+            calls.append(self.name)
+            if self.failure is not None:
+                raise self.failure
+
+    with pytest.raises(RuntimeError, match="scheduler close failed"):
+        await close_lifespan_resources(
+            (
+                RecordingCloser("slack-reminder"),
+                RecordingCloser("prompt-lab"),
+                RecordingCloser("alert", failure=error),
+                RecordingCloser("scheduler"),
+                RecordingCloser("socket"),
+                RecordingCloser("container"),
+            )
+        )
+
+    assert calls == [
+        "slack-reminder",
+        "prompt-lab",
+        "alert",
+        "scheduler",
+        "socket",
+        "container",
     ]
 
 

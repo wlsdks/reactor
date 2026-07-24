@@ -378,18 +378,37 @@ def ops_release_readiness_summary(settings: object) -> ReleaseReadinessSummaryRe
     provenance = release_readiness_provenance_summary(report.get("provenance"))
     blocking_reports = string_list(report.get("blockingReports"))
     summary_status = release_status(report.get("status"))
-    if provenance.status != "verified":
+    trusted_release_claims = provenance.status == "verified"
+    if not trusted_release_claims:
         summary_status = "blocked"
         blocking_reports = [*blocking_reports, "readiness_provenance"]
+        tag_recommendation = None
+    recommended_tag = (
+        optional_string(report.get("recommendedTag"))
+        or (tag_recommendation.recommendedTag if tag_recommendation else None)
+        if trusted_release_claims
+        else None
+    )
+    recommended_version_bump = (
+        optional_string(report.get("recommendedVersionBump"))
+        or (tag_recommendation.recommendedVersionBump if tag_recommendation else None)
+        if trusted_release_claims
+        else None
+    )
+    minor_eligible = (
+        (
+            optional_bool(report.get("minorEligible"))
+            if "minorEligible" in report
+            else (tag_recommendation.minorEligible if tag_recommendation else None)
+        )
+        if trusted_release_claims
+        else None
+    )
     return ReleaseReadinessSummaryResponse(
         status=summary_status,
-        recommendedTag=optional_string(report.get("recommendedTag"))
-        or (tag_recommendation.recommendedTag if tag_recommendation else None),
-        recommendedVersionBump=optional_string(report.get("recommendedVersionBump"))
-        or (tag_recommendation.recommendedVersionBump if tag_recommendation else None),
-        minorEligible=optional_bool(report.get("minorEligible"))
-        if "minorEligible" in report
-        else (tag_recommendation.minorEligible if tag_recommendation else None),
+        recommendedTag=recommended_tag,
+        recommendedVersionBump=recommended_version_bump,
+        minorEligible=minor_eligible,
         blockingReports=list(dict.fromkeys(blocking_reports)),
         warningReports=string_list(report.get("warningReports"))
         or string_list(report.get("warnings"))
