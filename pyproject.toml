@@ -24,7 +24,7 @@ dependencies = [
     "orjson==3.11.9",
     "prometheus-client==0.25.0",
     "psycopg[binary,pool]==3.3.4",
-    "pyjwt==2.13.0",
+    "pyjwt==2.15.0",
     "pydantic==2.13.4",
     "pydantic-settings==2.14.2",
     "redis==8.0.1",
